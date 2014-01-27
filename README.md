@@ -1,4 +1,4 @@
-BigPetStore with maven Profiles for dependency management
+BigPetStore with maven profiles for dependency management
 ==========================================================
 
 Build Instructions
