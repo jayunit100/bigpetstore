@@ -13,9 +13,9 @@ Build Instructions
 
 pig 0.12.0 from mvn central does not work out of the box
 
-so do the following
-1) get the pig jar
-wget http://apache.claz.org/pig/pig-0.12.0/pig-0.12.0.tar.gz
+so do the following  
+1) get the pig jar  
+wget http://apache.claz.org/pig/pig-0.12.0/pig-0.12.0.tar.gz  
 2) set up for pig build
 sudo tar -xzf pig-0.12.0.tar.gz
 sudo chmod -R 477 pig-0.12.0
@@ -32,3 +32,5 @@ mvn install:install-file -Dfile=pig.jar -DgroupId=org.bigpetstore.pigmodule -Dar
 'artifactId bigpetstore /artifactId'  
 'version 1.0 /version'  
 '/dependency'
+
+    
