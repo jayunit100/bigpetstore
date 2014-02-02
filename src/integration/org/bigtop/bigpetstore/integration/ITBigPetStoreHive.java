@@ -7,8 +7,6 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.Assert;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
@@ -20,11 +18,13 @@ import org.bigtop.bigpetstore.etl.PigETL;
 import org.bigtop.bigpetstore.generator.PetStoreJob;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.After;
-import org.junit.Test;
+
 
 import com.google.common.base.Function;
 import com.google.common.io.Files;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -110,7 +110,7 @@ public class ITBigPetStoreHive {
         while(r.ready()){
             String line = r.readLine();
             log.info("line:"+line);
-            Assert.assertTrue("validationg line : " +line , validator.apply(line));
+            Assert.assertTrue("validationg line : " + line, validator.apply(line));
         }
     }
     

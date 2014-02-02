@@ -26,14 +26,23 @@
 
     <dependencies>
 
-        <!-- misc -->
+        <!-- misc deps -->
+        <dependency>
+            <groupId>com.jolbox</groupId>
+            <artifactId>bonecp</artifactId>
+            <version>${bonecp.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derby</artifactId>
+            <version>${derby.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.1</version>
         </dependency>
-
-
 
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -41,16 +50,37 @@
             <version>15.0</version>
         </dependency>
 
+        <!-- hadoop deps -->
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-client</artifactId>
             <version>${hadoop.version}</version>
         </dependency>
+
+        <!-- Crunch deps -->
         <dependency>
-            <groupId>org.bigpetstore.pigmodule</groupId>
-            <artifactId>bigpetstore</artifactId>
-            <version>1.0</version>
+            <groupId>org.apache.crunch</groupId>
+            <artifactId>crunch-core</artifactId>
+            <version>0.6.0</version>
         </dependency>
+
+        <!-- mahout deps -->
+        <dependency>
+            <groupId>org.apache.mahout</groupId>
+            <artifactId>mahout-core</artifactId>
+            <version>0.8</version>
+        </dependency>
+
+        <!-- pig deps-->
+        <dependency>
+            <groupId>org.apache.pig</groupId>
+            <artifactId>pig</artifactId>
+            <classifier>h2</classifier>
+            <version>0.12.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!--logging-->
 
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -102,20 +132,7 @@
             <version>${hive.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.jolbox</groupId>
-            <artifactId>bonecp</artifactId>
-            <version>${bonecp.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.derby</groupId>
-            <artifactId>derby</artifactId>
-            <version>${derby.version}</version>
-        </dependency>
-
-
-
+        <!-- datanucleus -->
         <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-core</artifactId>
@@ -160,12 +177,17 @@
             <version>1.0.0</version>
             <classifier>hadoop2</classifier>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+        </dependency>
 
 
     </dependencies>
 
     <build>
-        <finalName>MapReduceModule</finalName>
+        <finalName>BigpetstorePro</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -206,11 +228,41 @@
                 <skip.unit.tests>false</skip.unit.tests>
             </properties>
             <dependencies>
-            <dependency>
-                <groupId>org.bigpetstore.pigmodule</groupId>
-                <artifactId>bigpetstore</artifactId>
-                <version>1.0</version>
-            </dependency>
+                <!-- misc -->
+                <dependency>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-lang3</artifactId>
+                    <version>3.1</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                    <version>${guava.version}</version>
+                </dependency>
+
+                <!-- pig -->
+                <dependency>
+                    <groupId>org.apache.pig</groupId>
+                    <artifactId>pig</artifactId>
+                    <classifier>h2</classifier>
+                    <version>0.12.0</version>
+                    <scope>provided</scope>
+                </dependency>
+
+                <!-- hadoop -->
+                <dependency>
+                    <groupId>org.apache.hadoop</groupId>
+                    <artifactId>hadoop-client</artifactId>
+                    <version>${hadoop.version}</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.apache.mrunit</groupId>
+                    <artifactId>mrunit</artifactId>
+                    <version>1.0.0</version>
+                    <classifier>hadoop2</classifier>
+                </dependency>
             </dependencies>
 
             <build>
@@ -224,6 +276,7 @@
                             </includes>
                             <excludes>
                                 <exclude>**/*TestHiveEmbedded.java</exclude>
+
                             </excludes>
                         </configuration>
                     </plugin>
