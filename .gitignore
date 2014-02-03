@@ -1,0 +1,12 @@
+.settings
+.springBeans
+.project
+.idea
+target
+*.class
+*.jar
+*.iml
+.classpath
+derby.log
+metastore_db
+
