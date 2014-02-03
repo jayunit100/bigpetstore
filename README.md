@@ -58,8 +58,8 @@ its output.  The result is a list of "transactions".  Each transaction is a tupl
 The next phase of the application processes the data to create basic aggregations.
 For example with both pig and hive these could easily include
 
-  *Number of transactions by state*
-  *Most valuable customer by state*
+  *Number of transactions by state* or
+  *Most valuable customer by state* or
   *Most popular items by state*
 
 
@@ -86,4 +86,3 @@ For Eclipse Users
 
 
 
-    
