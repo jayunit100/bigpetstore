@@ -187,7 +187,7 @@
     </dependencies>
 
     <build>
-        <finalName>BigpetstorePro</finalName>
+        <finalName>bigpetstore</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
