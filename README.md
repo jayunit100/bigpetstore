@@ -50,16 +50,18 @@ The first step is to generate a raw data set.  This is done by the "GeneratePetS
 The first MapReduce job in the pipeline runs a simple job which takes this input format and forwards
 its output.  The result is a list of "transactions".  Each transaction is a tuple of the format
 
- * * {state,name,date,price,product}.
+  *{state,name,date,price,product}.*
+
 
 * Phase 2: Processing the data
 
 The next phase of the application processes the data to create basic aggregations.
 For example with both pig and hive these could easily include
 
- * *  Number of transactions by state
- * *  Most valuable customer by state
- * *  Most popular items by state
+  *Number of transactions by state*
+  *Most valuable customer by state*
+  *Most popular items by state*
+
 
 * Phase 3: Clustering the states by all feilds
 
