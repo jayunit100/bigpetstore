@@ -37,7 +37,7 @@ export HADOOP_HOME=/{path to home dir}/hadoop
 wget  http://apache.cbox.biz/hive/hive-0.12.0.tar.gz  
 tar -xvf hive-0.12.0.tar.gz  
 mv hive-0.12.0 hive  
-cp /{path to home dir}/hive/lib/hive-contrib-0.12.0.jar /{path to home dir}/hadoop/lib/
+cp /{path to home dir}/hive/lib/hive-contrib-0.12.0.jar /{path to home dir}/hadoop/lib/  
 cp /{path to home dir}/hive/lib/hive-serde-0.12.0.jar /{path to home dir}/hadoop/lib/
 
 
