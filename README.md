@@ -1,5 +1,7 @@
-BigPetStore: Apache Bigtop/Hadoop Ecosystem Demo
-===============================================
+BigPetStore
+============
+Apache Bigtop/Hadoop Ecosystem Demo
+-----------------------------------
 This software is created to demonstrate Apache Bigtop for processing
 big data sets.
 
@@ -13,8 +15,35 @@ The application consists of the following modules
 * Hive: demo code for processing the data using Apache Hive demo code
 * Crunch: demo code for processing the data using Apache Crunch
 
+Setup
+-----
+
+there are no box specific set-up requirements for the main build
+however to run the hive profile follow the instructions below
+
+###Setup for hive code
+####Basically need to get hive-contrib-0.12.0.jar and hive-contrib-0.12.0.jar on the hadoop classpath at runtime
+
+here is one possible  way to do this  
+1) download and unpack hadoop-2.2.0.tar.gz then create a hive home directory and HIVE_HOME environment variable  
+  
+wget  http://apache.cbox.biz/hadoop/common/stable2/hadoop-2.2.0.tar.gz  
+tar -xvf hadoop-2.2.0.tar.gz  
+mv hadoop-2.2.0 hadoop  
+export HADOOP_HOME=/{path to home dir}/hadoop
+
+2) download and unpack  hive-0.12.0.tar.gz then put the following jars to the hadoop lib directory  
+wget  http://apache.cbox.biz/hive/hive-0.12.0.tar.gz  
+tar -xvf hive-0.12.0.tar.gz  
+mv hive-0.12.0 hive  
+cp /{path to home dir}hive/lib/hive-contrib-0.12.0.jar /home/vagrant/hadoop/lib/  
+cp /{path to home dir}/hive/lib/hive-serde-0.12.0.jar /home/vagrant/hadoop/lib/  
+
+
 Build Instructions
 ------------------
+
+the hive code requires a HADOOP_HOME variable to be set
 
 mvn clean package will build the bigpetstore jar
 
