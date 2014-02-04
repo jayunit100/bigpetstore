@@ -32,7 +32,8 @@ tar -xvf hadoop-2.2.0.tar.gz
 mv hadoop-2.2.0 hadoop  
 export HADOOP_HOME=/{path to home dir}/hadoop
 
-2) download and unpack  hive-0.12.0.tar.gz then put the following jars to the hadoop lib directory  
+2) download and unpack  hive-0.12.0.tar.gz then put the following jars to the hadoop lib directory
+
 wget  http://apache.cbox.biz/hive/hive-0.12.0.tar.gz  
 tar -xvf hive-0.12.0.tar.gz  
 mv hive-0.12.0 hive  
