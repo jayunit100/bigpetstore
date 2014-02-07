@@ -1,6 +1,5 @@
 package org.bigtop.bigpetstore.etl;
 
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -39,8 +38,7 @@ public class HiveETL extends PetStoreStatistics {
     public static final String HIVE_JDBC_EMBEDDED_CONNECTION = "jdbc:hive://";
     private static String driverName = "org.apache.hadoop.hive.jdbc.HiveDriver";
 
-    final static Logger log = LoggerFactory
-            .getLogger(HiveETL.class);
+    final static Logger log = LoggerFactory.getLogger(HiveETL.class);
 
     public HiveETL(Path pathToRawInput) throws Exception {
         super();
@@ -109,51 +107,48 @@ public class HiveETL extends PetStoreStatistics {
         return stmt;
     }
 
-
     /**
      * Takes path of transaction data and returns statistics.
      * 
      * @param
      * @return
      */
-    public Map<String, Integer> numberOfProductsByProduct() throws Exception{
+    public Map<String, Integer> numberOfProductsByProduct() throws Exception {
         Statement stmt = getConnection();
-        ResultSet res = 
-                stmt.executeQuery(
-                        "select product,count(*) as cnt " +
-                		"from hive_bigpetstore_etl group by product");
+        ResultSet res = stmt.executeQuery("select product,count(*) as cnt "
+                + "from hive_bigpetstore_etl group by product");
         stmt.close();
-        return convert("product",res);
+        return convert("product", res);
     }
 
-    public Map<String, Integer> numberOfTransactionsByState() throws Exception{
+    public Map<String, Integer> numberOfTransactionsByState() throws Exception {
         Statement stmt = getConnection();
-        ResultSet res = 
-                stmt.executeQuery("select state,count(*) as cnt from hive_bigpetstore_etl group by state");
+        ResultSet res = stmt
+                .executeQuery("select state,count(*) as cnt from hive_bigpetstore_etl group by state");
         stmt.close();
-        return convert("state",res);
+        return convert("state", res);
     }
 
     /**
-     * input : field name (i.e. "state" or "product") which is 
+     * input : field name (i.e. "state" or "product") which is
      * 
-     * Some utility methods to transform list of tuples into Map.  
+     * Some utility methods to transform list of tuples into Map.
      * 
-     * i.e. 
+     * i.e.
      * 
      * [AZ,3],[OK,2],[CA,8]
      * 
-     * into 
+     * into
      * 
-     * AZ -> 3
-     * OK -> 2 
-     * CA -> 8
+     * AZ -> 3 OK -> 2 CA -> 8
      */
-    
-    public static Map<String, Integer> convert(String field,ResultSet r) throws Exception {
+
+    public static Map<String, Integer> convert(String field, ResultSet r)
+            throws Exception {
         Map<String, Integer> converted = Maps.newHashMap();
         for (Map m : resultSetToArrayList(r)) {
-            converted.put((String) m.get(field), ((Number) m.get("cnt")).intValue());
+            converted.put((String) m.get(field),
+                    ((Number) m.get("cnt")).intValue());
         }
         return converted;
     }
@@ -173,5 +168,5 @@ public class HiveETL extends PetStoreStatistics {
 
         return list;
     }
- 
+
 }

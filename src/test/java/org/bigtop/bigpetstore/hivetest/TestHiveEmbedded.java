@@ -20,20 +20,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 public class TestHiveEmbedded {
 
     final static Logger log = LoggerFactory.getLogger(TestHiveEmbedded.class);
 
     public static final long ID = System.currentTimeMillis();
-    public static final String test_data_directory  =  "/tmp/BigPetStore"+ID;
+    public static final String test_data_directory = "/tmp/BigPetStore" + ID;
     public static final String HIVE_JDBC_DRIVER = "org.apache.hadoop.hive.jdbc.HiveDriver";
     public static final String HIVE_JDBC_EMBEDDED_CONNECTION = "jdbc:hive://";
     private static String driverName = "org.apache.hadoop.hive.jdbc.HiveDriver";
 
-
     @Test
-    public void testPetStorePipeline()  throws Exception {
+    public void testPetStorePipeline() throws Exception {
         int records = 10;
         /**
          * Setup configuration with prop.
@@ -41,16 +39,18 @@ public class TestHiveEmbedded {
         Configuration conf = new Configuration();
         conf.setInt(PetStoreJob.props.bigpetstore_records.name(), records);
 
-        Path raw_generated_data = new Path(test_data_directory,"generated");
+        Path raw_generated_data = new Path(test_data_directory, "generated");
 
-        Job createInput= PetStoreJob.createJob(raw_generated_data, conf);
+        Job createInput = PetStoreJob.createJob(raw_generated_data, conf);
         createInput.waitForCompletion(true);
-        JobID jId= createInput.getJobID();
+        JobID jId = createInput.getJobID();
 
-        Path outputfile = new Path(raw_generated_data,"part-r-00000");
-        List<String> lines = Files.readLines(FileSystem.getLocal(conf).pathToFile(outputfile), Charset.defaultCharset());
-        System.out.println("output : " + FileSystem.getLocal(conf).pathToFile(outputfile));
-        for(String l : lines){
+        Path outputfile = new Path(raw_generated_data, "part-r-00000");
+        List<String> lines = Files.readLines(FileSystem.getLocal(conf)
+                .pathToFile(outputfile), Charset.defaultCharset());
+        System.out.println("output : "
+                + FileSystem.getLocal(conf).pathToFile(outputfile));
+        for (String l : lines) {
             System.out.println(l);
 
         }
@@ -60,7 +60,8 @@ public class TestHiveEmbedded {
 
     }
 
-    private void  runHive(Statement stmt, Path pathToRawInput, Configuration conf) throws Exception {
+    private void runHive(Statement stmt, Path pathToRawInput, Configuration conf)
+            throws Exception {
 
         // TODO ^^ load this in from the first input (string[0]);
         stmt.execute("DROP TABLE hive_bigpetstore_etl");
@@ -99,21 +100,21 @@ public class TestHiveEmbedded {
                 .executeQuery("LOAD DATA INPATH '<rawInput>' INTO TABLE hive_bigpetstore_etl"
                         .replaceAll("<rawInput>", pathToRawInput.toString()));
 
-   //     res = stmt.executeQuery("select * from hive_bigpetstore_etl group by state");
+        // res =
+        // stmt.executeQuery("select * from hive_bigpetstore_etl group by state");
 
         res = stmt.executeQuery("select * from hive_bigpetstore_etl");
 
-        List<Map> resultList =  resultSetToArrayList(res);
+        List<Map> resultList = resultSetToArrayList(res);
 
         Map<String, Integer> converted = Maps.newHashMap();
         int k = 0;
-        for(Map m : resultList) {
-            converted.put((String) m.get("product"), ((Integer)k++));
+        for (Map m : resultList) {
+            converted.put((String) m.get("product"), ((Integer) k++));
 
         }
         log.info(converted.toString());
-    }    //
-
+    } //
 
     public static List<Map> resultSetToArrayList(ResultSet rs)
             throws SQLException {
@@ -131,11 +132,12 @@ public class TestHiveEmbedded {
         return list;
     }
 
-
-    public static Map<String, Integer> convert(String field,ResultSet r) throws Exception {
+    public static Map<String, Integer> convert(String field, ResultSet r)
+            throws Exception {
         Map<String, Integer> converted = Maps.newHashMap();
         for (Map m : resultSetToArrayList(r)) {
-            converted.put((String) m.get(field), ((Number) m.get("cnt")).intValue());
+            converted.put((String) m.get(field),
+                    ((Number) m.get("cnt")).intValue());
         }
         return converted;
     }

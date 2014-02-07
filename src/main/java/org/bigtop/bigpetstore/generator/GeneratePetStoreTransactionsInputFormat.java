@@ -18,103 +18,103 @@ import org.bigtop.bigpetstore.generator.TransactionIteratorFactory.STATE;
  * A simple input split that fakes input.
  */
 public class GeneratePetStoreTransactionsInputFormat extends
-		FileInputFormat<Text,Text> {
+        FileInputFormat<Text, Text> {
 
-	@Override
-	public RecordReader<Text, Text> createRecordReader(
-			final InputSplit inputSplit, TaskAttemptContext arg1) throws IOException,
-			InterruptedException {
-		return new RecordReader<Text, Text>() {
-			
-			@Override
-			public void close() throws IOException {
+    @Override
+    public RecordReader<Text, Text> createRecordReader(
+            final InputSplit inputSplit, TaskAttemptContext arg1)
+            throws IOException, InterruptedException {
+        return new RecordReader<Text, Text>() {
 
-			}
-			
-			/**
-			 * We need the "state" information to generate records.
-			 * - Each state has a probability associated with it, so that
-			 * our data set can be realistic (i.e. Colorado should have more transactions
-			 * than rhode island).
-			 * 
-			 * - Each state also will its name as part of the key.
-			 * 
-			 * - This task would be distributed, for example, into 50 nodes
-			 * on a real cluster, each creating the data for a given state.
-			 */
-					
-			//String storeCode = ((Split) inputSplit).storeCode;
-			int records = ((PetStoreTransactionInputSplit) inputSplit).records;
-			Iterator<KeyVal<String, String>> data = 
-			        (new TransactionIteratorFactory(
-			                records,((PetStoreTransactionInputSplit)inputSplit).state)).getData();
-			KeyVal<String, String> currentRecord;
+            @Override
+            public void close() throws IOException {
 
-			@Override
-			public Text getCurrentKey() throws IOException,
-					InterruptedException {
-				return new Text(currentRecord.key);
-			}
+            }
 
-			@Override
-			public Text getCurrentValue() throws IOException,
-					InterruptedException {
-				return new Text(currentRecord.val);
-			}
+            /**
+             * We need the "state" information to generate records. - Each state
+             * has a probability associated with it, so that our data set can be
+             * realistic (i.e. Colorado should have more transactions than rhode
+             * island).
+             * 
+             * - Each state also will its name as part of the key.
+             * 
+             * - This task would be distributed, for example, into 50 nodes on a
+             * real cluster, each creating the data for a given state.
+             */
 
-			@Override
-			public void initialize(InputSplit arg0, TaskAttemptContext arg1)
-					throws IOException, InterruptedException {
-			}
-			
-			@Override
-			public boolean nextKeyValue() throws IOException,
-					InterruptedException {
-				if(data.hasNext()) {
-					currentRecord = data.next();
-					return true;
-				}
-				return false;
-			}
+            // String storeCode = ((Split) inputSplit).storeCode;
+            int records = ((PetStoreTransactionInputSplit) inputSplit).records;
+            Iterator<KeyVal<String, String>> data = (new TransactionIteratorFactory(
+                    records, ((PetStoreTransactionInputSplit) inputSplit).state))
+                    .getData();
+            KeyVal<String, String> currentRecord;
 
-			@Override
-			public float getProgress() throws IOException,
-					InterruptedException {
-				return 0f;
-			}
+            @Override
+            public Text getCurrentKey() throws IOException,
+                    InterruptedException {
+                return new Text(currentRecord.key);
+            }
 
-		};
-	}
+            @Override
+            public Text getCurrentValue() throws IOException,
+                    InterruptedException {
+                return new Text(currentRecord.val);
+            }
+
+            @Override
+            public void initialize(InputSplit arg0, TaskAttemptContext arg1)
+                    throws IOException, InterruptedException {
+            }
+
+            @Override
+            public boolean nextKeyValue() throws IOException,
+                    InterruptedException {
+                if (data.hasNext()) {
+                    currentRecord = data.next();
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public float getProgress() throws IOException, InterruptedException {
+                return 0f;
+            }
+
+        };
+    }
 
     public enum props {
-        //bigpetstore_splits,
+        // bigpetstore_splits,
         bigpetstore_records
     }
-    
-	@Override
-	public List<InputSplit> getSplits(JobContext arg) throws IOException {
-		int num_records_desired = arg.getConfiguration().
-				getInt(GeneratePetStoreTransactionsInputFormat.props.bigpetstore_records.name(),-1);
-		if(num_records_desired == -1 ){
-			throw new RuntimeException("# of total records not set in configuration object: " + 
-		        arg.getConfiguration());
-		}
 
-		ArrayList<InputSplit> list = new ArrayList<InputSplit>();
+    @Override
+    public List<InputSplit> getSplits(JobContext arg) throws IOException {
+        int num_records_desired = arg
+                .getConfiguration()
+                .getInt(GeneratePetStoreTransactionsInputFormat.props.bigpetstore_records
+                        .name(), -1);
+        if (num_records_desired == -1) {
+            throw new RuntimeException(
+                    "# of total records not set in configuration object: "
+                            + arg.getConfiguration());
+        }
 
-		/**
-		 * Generator class will take a state as input and generate all 
-		 * the data for that state.
-		 */
-		for(TransactionIteratorFactory.STATE s : STATE.values())
-		{
-			PetStoreTransactionInputSplit split = 
-			        new PetStoreTransactionInputSplit(
-			                (int)(Math.ceil(num_records_desired * s.probability)),s);
-			System.out.println(s + " _ "+split.records);
-			list.add(split);
-		}
-		return list;
-	}
+        ArrayList<InputSplit> list = new ArrayList<InputSplit>();
+
+        /**
+         * Generator class will take a state as input and generate all the data
+         * for that state.
+         */
+        for (TransactionIteratorFactory.STATE s : STATE.values()) {
+            PetStoreTransactionInputSplit split = new PetStoreTransactionInputSplit(
+                    (int) (Math.ceil(num_records_desired * s.probability)), s);
+            System.out.println(s + " _ " + split.records);
+            list.add(split);
+        }
+        return list;
+    }
 
 }

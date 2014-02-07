@@ -20,24 +20,25 @@ import org.slf4j.LoggerFactory;
  * This is a mapreduce implementation of a generator of a large sentiment
  * analysis data set. The scenario is as follows:
  * 
- * The number of records will (roughly) correspond to the output size - each record is about 80 bytes.
+ * The number of records will (roughly) correspond to the output size - each
+ * record is about 80 bytes.
  * 
- * 1KB set bigpetstore_records=10 
- * 1MB set bigpetstore_records=10,000
- * 1GB set bigpetstore_records=10,000,000
- * 1TB set bigpetstore_records=10,000,000,000
+ * 1KB set bigpetstore_records=10 1MB set bigpetstore_records=10,000 1GB set
+ * bigpetstore_records=10,000,000 1TB set bigpetstore_records=10,000,000,000
  */
-public class PetStoreJob{
+public class PetStoreJob {
 
-    final static Logger log=LoggerFactory.getLogger(PetStoreJob.class);
+    final static Logger log = LoggerFactory.getLogger(PetStoreJob.class);
 
     public enum props {
         // bigpetstore_splits,
         bigpetstore_records
     }
 
-    public static Job createJob(Path output,Configuration conf) throws IOException{
-        Job job=new Job(conf, "PetStoreTransaction_ETL_"+System.currentTimeMillis());
+    public static Job createJob(Path output, Configuration conf)
+            throws IOException {
+        Job job = new Job(conf, "PetStoreTransaction_ETL_"
+                + System.currentTimeMillis());
         // recursively delete the data set if it exists.
         FileSystem.get(conf).delete(output, true);
         job.setJarByClass(PetStoreJob.class);
@@ -54,30 +55,32 @@ public class PetStoreJob{
         return job;
     }
 
-    public static class MyMapper extends Mapper<Text, Text, Text, Text>{
+    public static class MyMapper extends Mapper<Text, Text, Text, Text> {
 
         @Override
-        protected void setup(Context context) throws IOException, InterruptedException{
+        protected void setup(Context context) throws IOException,
+                InterruptedException {
             super.setup(context);
         }
 
-        protected void map(Text key,Text value,Context context) throws java.io.IOException, InterruptedException{
+        protected void map(Text key, Text value, Context context)
+                throws java.io.IOException, InterruptedException {
             context.write(key, value);
-            //TODO: Add multiple outputs here which writes mock addresses for generated users
-            //to a corresponding data file.
+            // TODO: Add multiple outputs here which writes mock addresses for
+            // generated users
+            // to a corresponding data file.
         };
     }
 
-    public static void main(String args[]) throws Exception{
-            if(args.length!=2){
-                System.err.println("USAGE : [number of records] [output path]");
-                System.exit(0);
-            }
-            else{
-                Configuration conf=new Configuration();
-                conf.setInt("totalRecords", Integer.parseInt(args[0]));
-                createJob(new Path(args[1]), conf).waitForCompletion(true);
-            }
+    public static void main(String args[]) throws Exception {
+        if (args.length != 2) {
+            System.err.println("USAGE : [number of records] [output path]");
+            System.exit(0);
+        } else {
+            Configuration conf = new Configuration();
+            conf.setInt("totalRecords", Integer.parseInt(args[0]));
+            createJob(new Path(args[1]), conf).waitForCompletion(true);
         }
+    }
 
 }

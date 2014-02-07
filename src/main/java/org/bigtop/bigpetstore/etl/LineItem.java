@@ -2,10 +2,7 @@ package org.bigtop.bigpetstore.etl;
 
 import java.io.Serializable;
 
-public class LineItem implements Serializable  {
-
-
-
+public class LineItem implements Serializable {
 
     public LineItem(String appName, String storeCode, Integer lineId,
             String firstName, String lastName, String timestamp, Double price,
