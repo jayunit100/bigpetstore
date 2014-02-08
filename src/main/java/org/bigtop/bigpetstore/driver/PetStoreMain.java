@@ -27,19 +27,16 @@ public class PetStoreMain {
                 generated+"",
                 generated+"_pigETL", 
                 ExecType.LOCAL);
-        
+       /** 
         System.out.println(pigETL.numberOfProductsByProduct());
         System.out.println(pigETL.numberOfTransactionsByState());
 
-        /**
-         * Now run PIG ETL of the data.
-         */
         CrunchETL crunchETL = new CrunchETL(
                 generated,
                 new Path(generated+"_pigETL"));
         
         System.out.println(crunchETL.numberOfProductsByProduct());
         System.out.println(crunchETL.numberOfTransactionsByState());
-
+        */
     }
 }

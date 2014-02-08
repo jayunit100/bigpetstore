@@ -45,17 +45,15 @@ public class TestPig {
                 .pathToFile(outputfile), Charset.defaultCharset());
         System.out.println("output : "
                 + FileSystem.getLocal(conf).pathToFile(outputfile));
-        /*
-         * for(String l : lines){ System.out.println(l);
-         * 
-         * }
-         */
+        
+          for(String l : lines){ System.out.println(l);
+              System.out.println(l);
+          }
 
-        // Map pig=runPig(raw_generated_data,new
-        // Path(test_data_directory+"/pig/"));
+          Map pig=runPig(raw_generated_data,new
+          Path(test_data_directory+"/pig/"));
 
-        // System.out.println("pig:"+ pig);
-
+          System.out.println("pig:"+ pig);
     }
 
     private Map runPig(Path input, Path output) throws Exception {
