@@ -13,6 +13,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Mapper.Context;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
+import org.bigtop.bigpetstore.util.BigPetStoreConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +36,12 @@ public class PetStoreJob {
         bigpetstore_records
     }
 
+    public static Job createJob(Path output, int records) throws IOException {
+        Configuration c = new Configuration();
+        c.setInt(props.bigpetstore_records.name(), 10);
+        return createJob(output, c);
+    }
+    
     public static Job createJob(Path output, Configuration conf)
             throws IOException {
         Job job = new Job(conf, "PetStoreTransaction_ETL_"
