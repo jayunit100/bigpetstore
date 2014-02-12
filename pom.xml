@@ -505,7 +505,7 @@
 				<activeByDefault>false</activeByDefault>
 			</activation>
 			<properties>
-				<skip.unit.tests>false</skip.unit.tests>
+				<skip.unit.tests>true</skip.unit.tests>
 			</properties>
 			<build>
 				<plugins>
@@ -513,9 +513,9 @@
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-surefire-plugin</artifactId>
 						<configuration>
-							<includes>
-								<include>**/*ITBig*</include>
-							</includes>
+							<excludes>
+								<exclude>**/*</exclude>
+							</excludes>
 						</configuration>
 					</plugin>
 					<plugin>
@@ -524,12 +524,8 @@
 						<version>2.12</version>
 						<configuration>
 							<includes>
-								<include>**/*ITBigPetStore*</include>
+								<include>**/*ITBigPetStoreCrunch.java</include>
 							</includes>
-							<excludes>
-								<exclude>**/*ITBigPetStorePig.java</exclude>
-								<exclude>**/*ITBigPetStoreHive.java</exclude>
-							</excludes>
 						</configuration>
 						<executions>
 							<execution>
