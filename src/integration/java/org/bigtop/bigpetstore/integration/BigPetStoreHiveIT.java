@@ -12,9 +12,7 @@ import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.Job;
-import org.apache.pig.ExecType;
 import org.bigtop.bigpetstore.etl.HiveETL;
-import org.bigtop.bigpetstore.etl.PigETL;
 import org.bigtop.bigpetstore.generator.PetStoreJob;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,12 +30,12 @@ import org.slf4j.LoggerFactory;
  * 
  *
  */
-public class ITBigPetStoreHive {
+public class BigPetStoreHiveIT {
 
     // We need the directory label to read a data from it later
     static long ID = System.currentTimeMillis();
     String test_data_directory  =  "/tmp/BigPetStore"+ID;
-    final static Logger log = LoggerFactory.getLogger(ITBigPetStoreHive.class);
+    final static Logger log = LoggerFactory.getLogger(BigPetStoreHiveIT.class);
 
     /**
      * Validates the intermediate JSON outputs from Pig and Hive

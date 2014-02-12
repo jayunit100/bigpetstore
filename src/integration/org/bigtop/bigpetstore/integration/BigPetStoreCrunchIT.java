@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Created by ubu on 2/2/14.
  */
-public class ITBigPetStoreCrunch {
+public class BigPetStoreCrunchIT {
 
     static long ID = System.currentTimeMillis();
     String test_data_directory = "/tmp/BigPetStore" + ID;

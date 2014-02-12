@@ -31,7 +31,7 @@ import java.util.Map;
  * Time: 7:21 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ITBigPetStorePig {
+public class BigPetStorePigIT {
 
     // We need the directory label to read a data from it later
     static long ID = System.currentTimeMillis();
