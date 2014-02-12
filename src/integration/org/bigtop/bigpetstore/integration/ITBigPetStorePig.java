@@ -85,10 +85,12 @@ public class ITBigPetStorePig {
                 new BufferedReader(
                         new InputStreamReader(fs.open(p)));
 
+        Assert.fail();
         //line:{"product":"big chew toy","count":3}
         while(r.ready()){
             String line = r.readLine();
             log.info("line:"+line);
+            System.out.println("line:"+line);
             Assert.assertTrue("validationg line : " + line, validator.apply(line));
         }
     }

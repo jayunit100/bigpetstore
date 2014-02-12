@@ -36,7 +36,7 @@ public class CrunchETL extends PetStoreStatistics {
             } catch (Throwable t) {
                 throw new RuntimeException(t);
             }
-        }
+        } 
     };
 
     PCollection<LineItem> lineItems;
