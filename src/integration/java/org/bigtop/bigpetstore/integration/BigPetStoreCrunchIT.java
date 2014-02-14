@@ -1,4 +1,4 @@
-package org.bigtop.bigpetstore.crunchtest;
+package org.bigtop.bigpetstore.integration;
 
 import com.google.common.io.Files;
 import org.apache.crunch.MapFn;
