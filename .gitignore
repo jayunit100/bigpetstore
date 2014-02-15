@@ -6,6 +6,8 @@ target
 *.class
 *.jar
 *.iml
+*part-r*
+*SUCCESS*
 .classpath
 derby.log
 metastore_db
