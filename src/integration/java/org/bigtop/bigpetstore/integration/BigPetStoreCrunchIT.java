@@ -22,9 +22,7 @@ public class BigPetStoreCrunchIT extends ITUtils {
 
     @Test
     public void testCrunchETL() throws Exception {
-        System.out.println("files : "+
-                FileSystem.getLocal(new Configuration()).globStatus(new Path(GENERATED,"part*")).length);
-        new CrunchETL(new Path(GENERATED+"part*"), ITUtils.CRUNCH_OUT);
+        new CrunchETL(GENERATED, ITUtils.CRUNCH_OUT);
         
     }
 
