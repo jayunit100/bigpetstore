@@ -265,13 +265,14 @@
 					<artifactId>hadoop-client</artifactId>
 					<version>${hadoop.version}</version>
 				</dependency>
-
+<!--
 				<dependency>
 					<groupId>org.apache.mrunit</groupId>
 					<artifactId>mrunit</artifactId>
 					<version>1.0.0</version>
 					<classifier>hadoop2</classifier>
 				</dependency>
+  -->
 			</dependencies>
 
 			<build>
