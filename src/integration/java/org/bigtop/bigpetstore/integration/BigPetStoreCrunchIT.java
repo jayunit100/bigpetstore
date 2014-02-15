@@ -22,8 +22,8 @@ public class BigPetStoreCrunchIT extends ITUtils {
 
     @Test
     public void testCrunchETL() throws Exception {
-        new CrunchETL(GENERATED, ITUtils.CRUNCH_OUT);
-        
+        CrunchETL etl = new CrunchETL(GENERATED, ITUtils.CRUNCH_OUT);
+        System.out.println(etl.numberOfProductsByProduct());
     }
 
 }
