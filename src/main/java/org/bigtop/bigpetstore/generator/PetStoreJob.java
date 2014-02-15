@@ -85,7 +85,9 @@ public class PetStoreJob {
             System.exit(0);
         } else {
             Configuration conf = new Configuration();
-            conf.setInt("totalRecords", Integer.parseInt(args[0]));
+            conf.setInt(
+                    GeneratePetStoreTransactionsInputFormat.props.bigpetstore_records.name(), 
+                    Integer.parseInt(args[0]));
             createJob(new Path(args[1]), conf).waitForCompletion(true);
         }
     }

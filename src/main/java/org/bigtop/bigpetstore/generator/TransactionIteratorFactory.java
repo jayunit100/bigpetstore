@@ -1,13 +1,12 @@
 package org.bigtop.bigpetstore.generator;
 
-import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Random;
-import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.mrunit.types.*;
+import org.bigtop.bigpetstore.util.Pair;
 
 /**
  * This class generates our data. Over time we will use it to embed bias which
