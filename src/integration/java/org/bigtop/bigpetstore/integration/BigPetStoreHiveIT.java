@@ -35,7 +35,7 @@ public class BigPetStoreHiveIT {
     // We need the directory label to read a data from it later
     static long ID = System.currentTimeMillis();
     String test_data_directory  =  "/tmp/BigPetStore"+ID;
-    final static Logger log = LoggerFactory.getLogger(BigPetStoreHiveIT.class);
+    final static Logger log = LoggerFactory.getLogger(org.bigtop.bigpetstore.integration.BigPetStoreHiveIT.class);
 
     /**
      * Validates the intermediate JSON outputs from Pig and Hive

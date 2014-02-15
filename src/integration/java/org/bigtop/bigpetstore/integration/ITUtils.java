@@ -18,11 +18,19 @@ import com.google.common.io.Files;
 public class ITUtils {
     
     static final Logger log = LoggerFactory.getLogger(ITUtils.class);
-    public static final Path GENERATED = new Path("/tmp/BigPetStoreTest","generated");
-    public static final Path PIG_OUT = new Path("/tmp/BigPetStoreTest",
-            "pig");
-    public static final Path CRUNCH_OUT = new Path("/tmp/BigPetStoreTest",
-            "crunch");
+    static FileSystem fs;
+    static{
+        try{
+            fs=FileSystem.getLocal(new Configuration());
+        }
+        catch(Exception e)
+        {
+            
+        }
+    }
+    public static final Path GENERATED = new Path("/tmp/BigPetStoreTest/generated/").makeQualified(fs);
+    public static final Path PIG_OUT = new Path("/tmp/BigPetStoreTest/pig/").makeQualified(fs);
+    public static final Path CRUNCH_OUT = new Path("/tmp/BigPetStoreTest/crunch/").makeQualified(fs);
     
     /**
      * Creates a generated input data set in 
