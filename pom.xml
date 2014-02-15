@@ -56,13 +56,6 @@
 			<version>${hadoop.version}</version>
 		</dependency>
 
-		<!-- Crunch deps -->
-		<dependency>
-			<groupId>org.apache.crunch</groupId>
-			<artifactId>crunch-core</artifactId>
-			<version>0.6.0</version>
-		</dependency>
-
 		<!-- mahout deps -->
 		<dependency>
 			<groupId>org.apache.mahout</groupId>
@@ -182,6 +175,14 @@
 	<build>
 		<finalName>bigpetstore</finalName>
 		<plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-eclipse-plugin</artifactId>
+                <configuration>
+                    <downloadSources>true</downloadSources>
+                    <downloadJavadocs>true</downloadJavadocs>
+                </configuration>
+            </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -604,6 +605,11 @@
 					<artifactId>crunch-core</artifactId>
 					<version>0.9.0-hadoop2</version>
 				</dependency>
+		       <dependency>
+		            <groupId>com.google.protobuf</groupId>
+		            <artifactId>protobuf-java</artifactId>
+		            <version>2.5.0</version>
+		        </dependency>
 			</dependencies>
 		</profile>
 

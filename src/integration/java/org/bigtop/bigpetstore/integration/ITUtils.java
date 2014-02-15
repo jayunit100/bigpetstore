@@ -3,12 +3,14 @@ package org.bigtop.bigpetstore.integration;
 
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.Job;
 import org.bigtop.bigpetstore.generator.PetStoreJob;
+import org.bigtop.bigpetstore.generator.TransactionIteratorFactory.STATE;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +33,23 @@ public class ITUtils {
     public static final Path GENERATED = new Path("/tmp/BigPetStoreTest/generated/").makeQualified(fs);
     public static final Path PIG_OUT = new Path("/tmp/BigPetStoreTest/pig/").makeQualified(fs);
     public static final Path CRUNCH_OUT = new Path("/tmp/BigPetStoreTest/crunch/").makeQualified(fs);
+    
+    /**
+     * A poor mans unit test for stochastic data:
+     * Verify that at least one product has valid amount.
+     */
+    public static boolean hasAProduct(Map<String,? extends Number> m){
+        for(STATE s : STATE.values()){
+            for(String p : s.products){
+                if(m.containsKey(p)){
+                    if(m.get(p).intValue()>0){
+                        return true;
+                }
+              }
+            }
+        }
+        return false;
+    }
     
     /**
      * Creates a generated input data set in 

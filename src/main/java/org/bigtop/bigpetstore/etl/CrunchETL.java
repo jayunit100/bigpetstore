@@ -42,7 +42,7 @@ public class CrunchETL extends PetStoreStatistics {
     PCollection<LineItem> lineItems;
 
     public CrunchETL(Path input, Path output) throws Exception {
-        Pipeline pipeline = new MRPipeline(CrunchETL.class);
+        Pipeline pipeline = MemPipeline.getInstance();
         PCollection<String> lines = pipeline.read(From.textFile(new Path(input,
                 "part-r-00000")));
         System.out.println("crunch : " + lines.getName() + "  "
@@ -83,7 +83,7 @@ public class CrunchETL extends PetStoreStatistics {
         PTable<String, Long> counts = lineItems.parallelDo(COUNT_BY_PRODUCT,
                 Avros.strings()).count();
         Map m = counts.materializeToMap();
-        System.out.println("Crunch:::  " + m);
+        //CrunchETL. System.out.println("Crunch:::  " + m);
         return m;
     }
 
