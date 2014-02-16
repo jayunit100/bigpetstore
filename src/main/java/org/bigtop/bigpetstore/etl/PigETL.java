@@ -1,13 +1,17 @@
 package org.bigtop.bigpetstore.etl;
 
+import java.util.Iterator;
+import java.util.Map;
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.util.Tool;
+import org.apache.hadoop.util.ToolRunner;
 import org.apache.pig.ExecType;
 import org.apache.pig.PigServer;
 import org.apache.pig.data.Tuple;
 import org.bigtop.bigpetstore.contract.PetStoreStatistics;
-import com.google.common.collect.Maps;
 
-import java.util.Iterator;
-import java.util.Map;
+import com.google.common.collect.Maps;
 
 /**
  * This class operates by ETL'ing the dataset into pig, and then implements the
@@ -23,7 +27,7 @@ public class PigETL extends PetStoreStatistics {
     public PigETL(String inputPath, String outputPath, ExecType ex)
             throws Exception {
 
-        System.out.println("inputPathinputPath " + inputPath);
+        System.out.println("input  " + inputPath);
 
         // run pig in local mode
         pigServer = new PigServer(ex);
@@ -76,7 +80,13 @@ public class PigETL extends PetStoreStatistics {
         /**
          * pigServer.registerQuery( "transactionsG = group transactions by ;");
          */
-
+        pigServer.registerQuery(PROD_BY_PROD);
+        //lets see if we can store this...
+        if(outputPath != null){
+            System.out.println("Persisting results.");
+            pigServer.store("transactionsG","transaction_groups");
+            pigServer.store("PROD_BY_PROD","PROD_BY_PROD_output");
+        }
     }
 
     @Override
@@ -84,14 +94,17 @@ public class PigETL extends PetStoreStatistics {
         throw new RuntimeException("not implemented yet");
     }
 
+    public static String PROD_BY_PROD=
+            "PROD_BY_PROD  = foreach transactionsG {"
+            + "sym = transactions.product ;"
+            + "generate flatten(sym) as product:chararray, COUNT(sym) as count:long ;"
+            + "};";
+    
     @Override
     public Map<String, Integer> numberOfProductsByProduct() throws Exception {
 
         pigServer
-                .registerQuery("uniqcnt  = foreach transactionsG {"
-                        + "sym = transactions.product ;"
-                        + "generate flatten(sym) as product:chararray, COUNT(sym) as count:long ;"
-                        + "};");
+                .registerQuery(PROD_BY_PROD);
 
         System.out.println("Schema : " + pigServer.dumpSchema("uniqcnt"));
 
@@ -104,5 +117,36 @@ public class PigETL extends PetStoreStatistics {
         // pigServer.store("uniqcnt", outputPath, "JsonStorage");
         return ret;
     }
+
+    public static void main(final String[] args) throws Exception {
+        System.out.println("Starting pig etl " + args.length);
+        Configuration c = new Configuration();
+        int res = ToolRunner.run(
+                c, 
+                new Tool() {
+                    Configuration conf;
+                    @Override
+                    public void setConf(Configuration conf) {
+                        this.conf=conf;
+                    }
+                    
+                    @Override
+                    public Configuration getConf() {
+                        return this.conf;
+                    }
+                    
+                    @Override
+                    public int run(String[] args) throws Exception {
+                        new PigETL(
+                                args[0],
+                                args[1],
+                                ExecType.MAPREDUCE);
+                 
+                        return 0;
+                    }
+                }, args);
+        System.exit(res);
+      }
+
 
 }

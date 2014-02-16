@@ -5,8 +5,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Random;
 
-import org.apache.commons.lang3.StringUtils;
 import org.bigtop.bigpetstore.util.Pair;
+import org.bigtop.bigpetstore.util.StringUtils;
 
 /**
  * This class generates our data. Over time we will use it to embed bias which
