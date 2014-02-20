@@ -18,7 +18,7 @@ MAHOUT_VIEW [label="CSV for MAHOUT | x,y,prob"];
 
    CSV -> hive ; 
    hive -> MAHOUT_VIEW [label="select coordinates"];          
-    MAHOUT_VIEW -> mahout -> PROD_REC ;
+    MAHOUT_VIEW -> mahout_collab_filter_recomender -> PROD_REC ;
    PROD_REC  -> crunch
    CSV -> crunch ; 
    crunch -> CUSTOMER_PAGE [label="s|b"];
