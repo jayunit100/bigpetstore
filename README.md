@@ -44,6 +44,8 @@ cp /{path to home dir}/hive/lib/hive-serde-0.12.0.jar /{path to home dir}/hadoop
 Build Instructions
 ------------------
 
+#i dont think we need this anymore, lets update these soon.
+#now that we are in hadoop2.
 the hive code requires a HADOOP_HOME variable to be set
 
 mvn clean package will build the bigpetstore jar
@@ -56,7 +58,9 @@ Run Intergration tests with
 
   * Pig profile: mvn clean verify -P pig
   * Hive profile: mvn clean verify -P hive
+  * Crunch profile: mvn clean verify -P crunch
 
+To Develop see eclipse directions below 
 
 High level summary
 ------------------
