@@ -1,0 +1,26 @@
+digraph ethane {
+
+   node [shape=record];
+   CUSTOMER_PAGE [label="CUSTOMER_PAGE|json"];
+
+   DIRTY_CSV [label="DIRTY_CSV|fname   lname -prod , price ,prod,.."];
+
+   CSV [label="CSV|fname,lname,prod,price,date,xcoord,ycoord,..."];
+
+   PROD_REC [label="PROD_REC  | jay vyas, dogfood, .6"];
+
+
+MAHOUT_VIEW [label="CSV for MAHOUT | x,y,prob"];
+
+   Generate -> DIRTY_CSV ;
+   DIRTY_CSV -> pig [label="apply hash for coords, clean"];  
+   pig -> CSV [Shape="record"];
+
+   CSV -> hive ; 
+   hive -> MAHOUT_VIEW [label="select coordinates"];          
+    MAHOUT_VIEW -> mahout -> PROD_REC ;
+   PROD_REC  -> crunch
+   CSV -> crunch ; 
+   crunch -> CUSTOMER_PAGE [label="s|b"];
+}
+        
