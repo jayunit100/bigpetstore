@@ -1,6 +1,9 @@
 package org.bigtop.bigpetstore.etl;
 
+import java.io.IOException;
+
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
@@ -18,13 +21,12 @@ public class PigCSVCleaner  {
 
     PigServer pigServer;
     
-    
-    
-    public PigCSVCleaner(Path inputPath, ExecType ex)
+    public PigCSVCleaner(Path inputPath, Path outputPath, ExecType ex)
             throws Exception {
 
-        System.out.println("input  " + inputPath);
-
+        FileSystem fs = FileSystem.get(new Configuration());
+        
+        verifyInputOutput(inputPath, outputPath, fs);
         // run pig in local mode
         pigServer = new PigServer(ex);
         // final String datapath =
@@ -58,15 +60,28 @@ public class PigCSVCleaner  {
                         + "FLATTEN" + "(STRSPLIT" +
                         "(DETAILS,',',5)) AS (lname, fname, date, price, product:chararray);");
         
-        pigServer.store("id_details", "transactions-cleaned");
+        pigServer.store("id_details", outputPath.toString());
         
+    }
+
+    private void verifyInputOutput(Path inputPath, Path outputPath,
+            FileSystem fs) throws IOException {
+        if(! fs.exists(inputPath)){
+            throw new RuntimeException("INPUT path DOES NOT exist : " + inputPath);
+        }
+
+        if(fs.exists(outputPath)){
+            throw new RuntimeException("OUTPUT already exists : " + outputPath);
+        }
     }
 
     public static void main(final String[] args) throws Exception {
         System.out.println("Starting pig etl " + args.length);
+
         Configuration c = new Configuration();
         int res = ToolRunner.run(
                 c, 
+                
                 new Tool() {
                     Configuration conf;
                     @Override
@@ -83,6 +98,7 @@ public class PigCSVCleaner  {
                     public int run(String[] args) throws Exception {
                         new PigCSVCleaner(
                                 new Path(args[0]),
+                                new Path(args[1]),
                                 ExecType.MAPREDUCE);
                         return 0;
                     }

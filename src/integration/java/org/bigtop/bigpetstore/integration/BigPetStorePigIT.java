@@ -1,7 +1,6 @@
 package org.bigtop.bigpetstore.integration;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStreamReader;
 import java.util.Map;
 
@@ -12,8 +11,8 @@ import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.pig.ExecType;
-import org.bigtop.bigpetstore.etl.PigETL;
-import org.junit.After;
+import org.bigtop.bigpetstore.etl.PigCSVCleaner;
+import org.bigtop.bigpetstore.integration.ITUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -35,28 +34,42 @@ public class BigPetStorePigIT extends ITUtils{
     @Before
     public void setupTest() throws Throwable {
         super.setup();
+        try{
+            FileSystem.get(new Configuration()).delete(BPS_TEST_PIG_CLEANED);
+        }
+        catch(Exception e){
+            System.out.println("didnt need to delete pig output.");
+            //not necessarily an error
+        }
     }
     
     @Test
     public void testPetStorePipeline()  throws Exception {
-        runPig(GENERATED,PIG_OUT);
+        runPig(BPS_TEST_GENERATED,BPS_TEST_PIG_CLEANED);
+        assertOutput(
+                BPS_TEST_PIG_CLEANED, 
+                new Function<String, Boolean>(){
+                    public Boolean apply(String x){
+                        System.out.println("Verify " + x);
+                        return true;
+                    }
+                });
     }
 
-    public static void assertOutput(Path root,Function<String, Boolean> validator) throws Exception{
+    public static void assertOutput(Path base,Function<String, Boolean> validator) throws Exception{
         FileSystem fs = FileSystem.getLocal(new Configuration());
 
-        FileStatus[] files=fs.listStatus(root);
+        FileStatus[] files=fs.listStatus(base);
         //print out all the files.
         for(FileStatus stat : files){
             System.out.println(stat.getPath() +"  " + stat.getLen());
         }
 
-        Path p = new Path(root,"part-r-00000");
+        Path p = new Path(base,"part-r-00000");
         BufferedReader r =
                 new BufferedReader(
                         new InputStreamReader(fs.open(p)));
 
-        Assert.fail();
         //line:{"product":"big chew toy","count":3}
         while(r.ready()){
             String line = r.readLine();
@@ -69,9 +82,10 @@ public class BigPetStorePigIT extends ITUtils{
     Map pigResult;
 
     private void runPig(Path input, Path output) throws Exception {
-        pigResult = new PigETL(
-                input.toString(),
-                output.toString(), ExecType.LOCAL).numberOfProductsByProduct();
+                new PigCSVCleaner(
+                        input,
+                        output,
+                        ExecType.LOCAL);
     }
 
 }

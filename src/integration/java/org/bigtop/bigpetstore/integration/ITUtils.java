@@ -3,14 +3,12 @@ package org.bigtop.bigpetstore.integration;
 
 import java.nio.charset.Charset;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.Job;
 import org.bigtop.bigpetstore.generator.PetStoreJob;
-import org.bigtop.bigpetstore.generator.TransactionIteratorFactory.STATE;
 import org.bigtop.bigpetstore.util.BigPetStoreConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +29,8 @@ public class ITUtils {
             
         }
     }
-    public static final Path BPS_TEST_GENERATED = new Path("bps_integration_",BigPetStoreConstants.GENERATED).makeQualified(fs);
-    public static final Path BPS_TEST_PIG_CLEANED = new Path("bps_integration_",BigPetStoreConstants.CLEANED).makeQualified(fs);
+    public static final Path BPS_TEST_GENERATED = new Path("bps_integration_",BigPetStoreConstants.OUTPUTS.GENERATED.name()).makeQualified(fs);
+    public static final Path BPS_TEST_PIG_CLEANED = new Path("bps_integration_",BigPetStoreConstants.OUTPUTS.CLEANED.name()).makeQualified(fs);
     //public static final Path CRUNCH_OUT = new Path("bps_integration_",BigPetStoreConstants.OUTPUT_3).makeQualified(fs);
     
     /**
@@ -63,7 +61,7 @@ public class ITUtils {
         Job createInput= PetStoreJob.createJob(BPS_TEST_GENERATED, conf);
         createInput.waitForCompletion(true);
         
-        Path outputfile = new Path(GENERATED,"part-r-00000");
+        Path outputfile = new Path(BPS_TEST_GENERATED,"part-r-00000");
         List<String> lines = Files.readLines(FileSystem.getLocal(conf).pathToFile(outputfile), Charset.defaultCharset());
         log.info("output : " + FileSystem.getLocal(conf).pathToFile(outputfile));
         for(String l : lines){
