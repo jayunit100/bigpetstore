@@ -19,7 +19,12 @@ import com.google.common.io.Files;
 public class ITUtils {
     
     static final Logger log = LoggerFactory.getLogger(ITUtils.class);
+    
     static FileSystem fs;
+    public static final Path BPS_TEST_GENERATED = new Path("bps_integration_",BigPetStoreConstants.OUTPUTS.GENERATED.name()).makeQualified(fs);
+    public static final Path BPS_TEST_PIG_CLEANED = new Path("bps_integration_",BigPetStoreConstants.OUTPUTS.CLEANED.name()).makeQualified(fs);
+    public static final Path BPS_TEST_MAHOUT_IN = new Path("bps_integration_",BigPetStoreConstants.OUTPUTS.MAHOUT_CF_IN.name()).makeQualified(fs);
+
     static{
         try{
             fs=FileSystem.getLocal(new Configuration());
@@ -29,8 +34,6 @@ public class ITUtils {
             
         }
     }
-    public static final Path BPS_TEST_GENERATED = new Path("bps_integration_",BigPetStoreConstants.OUTPUTS.GENERATED.name()).makeQualified(fs);
-    public static final Path BPS_TEST_PIG_CLEANED = new Path("bps_integration_",BigPetStoreConstants.OUTPUTS.CLEANED.name()).makeQualified(fs);
     //public static final Path CRUNCH_OUT = new Path("bps_integration_",BigPetStoreConstants.OUTPUT_3).makeQualified(fs);
     
     /**

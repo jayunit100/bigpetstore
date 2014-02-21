@@ -1,7 +1,5 @@
 package org.bigtop.bigpetstore.etl;
 
-import java.io.IOException;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -26,7 +24,13 @@ public class PigCSVCleaner  {
 
         FileSystem fs = FileSystem.get(new Configuration());
         
-        verifyInputOutput(inputPath, outputPath, fs);
+        if(! fs.exists(inputPath)){
+            throw new RuntimeException("INPUT path DOES NOT exist : " + inputPath);
+        }
+
+        if(fs.exists(outputPath)){
+            throw new RuntimeException("OUTPUT already exists : " + outputPath);
+        }
         // run pig in local mode
         pigServer = new PigServer(ex);
         // final String datapath =
@@ -62,17 +66,6 @@ public class PigCSVCleaner  {
         
         pigServer.store("id_details", outputPath.toString());
         
-    }
-
-    private void verifyInputOutput(Path inputPath, Path outputPath,
-            FileSystem fs) throws IOException {
-        if(! fs.exists(inputPath)){
-            throw new RuntimeException("INPUT path DOES NOT exist : " + inputPath);
-        }
-
-        if(fs.exists(outputPath)){
-            throw new RuntimeException("OUTPUT already exists : " + outputPath);
-        }
     }
 
     public static void main(final String[] args) throws Exception {

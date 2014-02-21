@@ -12,111 +12,79 @@ import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.Job;
-import org.bigtop.bigpetstore.etl.HiveETL;
+import org.apache.pig.ExecType;
+import org.bigtop.bigpetstore.etl.HiveViewCreator;
+import org.bigtop.bigpetstore.etl.PigCSVCleaner;
 import org.bigtop.bigpetstore.generator.PetStoreJob;
+import org.bigtop.bigpetstore.integration.ITUtils;
+import org.bigtop.bigpetstore.util.BigPetStoreConstants;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 
 import com.google.common.base.Function;
 import com.google.common.io.Files;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * new HiveViewCreator(input,BigPetStoreConstants.OUTPUTS.MAHOUT_CF_IN.name());
  * 
- *
+ * 
  */
-public class BigPetStoreHiveIT {
+public class BigPetStoreHiveIT extends ITUtils{
+    final static Logger log = LoggerFactory.getLogger(BigPetStoreHiveIT.class);
 
-    // We need the directory label to read a data from it later
-    static long ID = System.currentTimeMillis();
-    String test_data_directory  =  "/tmp/BigPetStore"+ID;
-    final static Logger log = LoggerFactory.getLogger(org.bigtop.bigpetstore.integration.BigPetStoreHiveIT.class);
-
-    /**
-     * Validates the intermediate JSON outputs from Pig and Hive
-     */
-    public Function<String,Boolean> ETL_JSON_VALIDATOR = 
-        new Function<String, Boolean>() {
-            public Boolean apply(String line){
-                JSONObject jso;
-                try {
-                    jso = new JSONObject(line);
-                    return 
-                            (jso.getString("product").length()>0) && 
-                            (jso.getInt("count")>0);
-                } 
-                catch (JSONException e) {
-                    return false;
-                }
-            }
-        };
-    
-    @After
-    public void tearDown() throws Exception {
-        org.apache.commons.io.FileUtils.deleteDirectory(new File(test_data_directory));
-    }
-    
-    @Test
-    public void testPetStorePipeline()  throws Exception {
-        int records = 10;
-        /**
-         * Setup configuration with prop.
-         */
-        Configuration conf = new Configuration();
-        conf.setInt(PetStoreJob.props.bigpetstore_records.name(), records);
-
-        Path raw_generated_data = new Path(test_data_directory,"generated");
-
-        Job createInput= PetStoreJob.createJob(raw_generated_data, conf);
-        createInput.waitForCompletion(true);
-
-        Path outputfile = new Path(raw_generated_data,"part-r-00000");
-        List<String> lines = Files.readLines(FileSystem.getLocal(conf).pathToFile(outputfile),Charset.defaultCharset());
-        log.info("output : " + FileSystem.getLocal(conf).pathToFile(outputfile));
-        for(String l : lines){
-            System.out.println(l);
-            
+    @Before
+    public void setupTest() throws Throwable {
+        super.setup();
+        try {
+            FileSystem.get(new Configuration()).delete(BPS_TEST_MAHOUT_IN);
+        } catch (Exception e) {
+            System.out.println("didnt need to delete hive output.");
+            // not necessarily an error
         }
-
-        runHive(raw_generated_data);
-
-
-
-        log.info("hive:"+ hiveResult);
     }
 
-    public static void assertOutput(Path root,Function<String, Boolean> validator) throws Exception{
+    @Test
+    public void testPetStorePipeline() throws Exception {
+        new HiveViewCreator().run(
+                new String[]{
+                        BPS_TEST_PIG_CLEANED.toString(),
+                        BPS_TEST_MAHOUT_IN.toString()});
+        
+        assertOutput(BPS_TEST_MAHOUT_IN, new Function<String, Boolean>() {
+            public Boolean apply(String x) {
+                System.out.println("Verify " + x);
+                return true;
+            }
+        });
+    }
+
+    public static void assertOutput(Path base,
+            Function<String, Boolean> validator) throws Exception {
         FileSystem fs = FileSystem.getLocal(new Configuration());
 
-        FileStatus[] files=fs.listStatus(root);
-        //print out all the files.
-        for(FileStatus stat : files){
-            System.out.println(stat.getPath() +"  " + stat.getLen());
+        FileStatus[] files = fs.listStatus(base);
+        // print out all the files.
+        for (FileStatus stat : files) {
+            System.out.println(stat.getPath() + "  " + stat.getLen());
         }
 
-        Path p = new Path(root,"part-r-00000");
-        BufferedReader r = 
-                new BufferedReader(
-                        new InputStreamReader(fs.open(p)));
-        
-        //line:{"product":"big chew toy","count":3}
-        while(r.ready()){
+        Path p = new Path(base, "part-r-00000");
+        BufferedReader r = new BufferedReader(new InputStreamReader(fs.open(p)));
+
+        // line:{"product":"big chew toy","count":3}
+        while (r.ready()) {
             String line = r.readLine();
-            log.info("line:"+line);
-            Assert.assertTrue("validationg line : " + line, validator.apply(line));
+            log.info("line:" + line);
+            System.out.println("line:" + line);
+            Assert.assertTrue("validationg line : " + line,
+                    validator.apply(line));
         }
     }
-    
-    Map hiveResult;
 
-
-    private void runHive(Path input) throws Exception {
-                hiveResult = new HiveETL(input).numberOfProductsByProduct();
-
-   }
 }
