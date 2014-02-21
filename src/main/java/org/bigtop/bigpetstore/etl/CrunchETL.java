@@ -17,9 +17,6 @@ import org.bigtop.bigpetstore.contract.PetStoreStatistics;
 
 public class CrunchETL extends PetStoreStatistics {
 
-    // STATIC function declarations, so that we dont run into serialization
-    // reference issues.
-    // See docs for DoFn for reasons why...
     public static MapFn<LineItem, String> COUNT_BY_PRODUCT = new MapFn<LineItem, String>() {
         public String map(LineItem lineItem) {
             try {
@@ -47,9 +44,6 @@ public class CrunchETL extends PetStoreStatistics {
                 "part-r-00000")));
         System.out.println("crunch : " + lines.getName() + "  "
                 + lines.getSize());
-        // System.out.println(FileSystem.get(new
-        // Configuration()).getLength(input));
-
         lineItems = lines.parallelDo(ETL, Avros.reflects(LineItem.class));
 
     }
@@ -87,34 +81,19 @@ public class CrunchETL extends PetStoreStatistics {
         return m;
     }
 
-    /**
-     * This is just prototype code, we will modify it later, but it works.
-     * 
-     * @param args
-     * @throws Exception
-     */
     public static void main(String... args) throws Exception {
         /**
          * PCollection<String> lines = MemPipeline .collectionOf(
-         * "BigPetStore,storeCode_AK,1  lindsay,franco,Sat Jan 10 00:11:10 EST 1970,10.5,dog-food"
-         * ,
-         * "BigPetStore,storeCode_AZ,1  tom,giles,Sun Dec 28 23:08:45 EST 1969,10.5,dog-food"
-         * ,
-         * "BigPetStore,storeCode_CA,1  brandon,ewing,Mon Dec 08 20:23:57 EST 1969,16.5,organic-dog-food"
-         * ,
-         * "BigPetStore,storeCode_CA,2  angie,coleman,Thu Dec 11 07:00:31 EST 1969,10.5,dog-food"
-         * ,
-         * "BigPetStore,storeCode_CA,3  angie,coleman,Tue Jan 20 06:24:23 EST 1970,7.5,cat-food"
-         * ,
-         * "BigPetStore,storeCode_CO,1  sharon,trevino,Mon Jan 12 07:52:10 EST 1970,30.1,antelope snacks"
-         * ,
-         * "BigPetStore,storeCode_CT,1  kevin,fitzpatrick,Wed Dec 10 05:24:13 EST 1969,10.5,dog-food"
-         * ,
-         * "BigPetStore,storeCode_NY,1  dale,holden,Mon Jan 12 23:02:13 EST 1970,19.75,fish-food"
-         * ,
-         * "BigPetStore,storeCode_NY,2  dale,holden,Tue Dec 30 12:29:52 EST 1969,10.5,dog-food"
-         * ,
-         * "BigPetStore,storeCode_OK,1  donnie,tucker,Sun Jan 18 04:50:26 EST 1970,7.5,cat-food"
+         *  "BigPetStore,storeCode_AK,1  lindsay,franco,Sat Jan 10 00:11:10 EST 1970,10.5,dog-food"
+         *  "BigPetStore,storeCode_AZ,1  tom,giles,Sun Dec 28 23:08:45 EST 1969,10.5,dog-food"
+         *  "BigPetStore,storeCode_CA,1  brandon,ewing,Mon Dec 08 20:23:57 EST 1969,16.5,organic-dog-food"
+         *  "BigPetStore,storeCode_CA,2  angie,coleman,Thu Dec 11 07:00:31 EST 1969,10.5,dog-food"
+         *  "BigPetStore,storeCode_CA,3  angie,coleman,Tue Jan 20 06:24:23 EST 1970,7.5,cat-food"
+         *  "BigPetStore,storeCode_CO,1  sharon,trevino,Mon Jan 12 07:52:10 EST 1970,30.1,antelope snacks"
+         *  "BigPetStore,storeCode_CT,1  kevin,fitzpatrick,Wed Dec 10 05:24:13 EST 1969,10.5,dog-food"
+         *  "BigPetStore,storeCode_NY,1  dale,holden,Mon Jan 12 23:02:13 EST 1970,19.75,fish-food"
+         *  "BigPetStore,storeCode_NY,2  dale,holden,Tue Dec 30 12:29:52 EST 1969,10.5,dog-food"
+         *  "BigPetStore,storeCode_OK,1  donnie,tucker,Sun Jan 18 04:50:26 EST 1970,7.5,cat-food"
          * );
          **/
         // FAILS
@@ -136,15 +115,6 @@ public class CrunchETL extends PetStoreStatistics {
                         return li;
                     }
                 }, Avros.reflects(LineItem.class));
-        /**
-         * //System.out.println(); final PTable<String, Long> counts =
-         * lineItems.parallelDo( new MapFn<LineItem, String>() { public String
-         * map(LineItem lineItem) { try{ System.out.println("proc2"); return
-         * lineItem.getAppName(); } catch(Throwable t){ throw new
-         * RuntimeException(t); } } }, Avros.strings()).count();
-         * 
-         * Map m = counts.materializeToMap(); System.out.println(m);
-         */
 
         for (LineItem i : lineItems.materialize())
             System.out.println(i);

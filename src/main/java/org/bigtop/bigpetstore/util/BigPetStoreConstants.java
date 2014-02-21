@@ -8,4 +8,14 @@ package org.bigtop.bigpetstore.util;
  */
 public class BigPetStoreConstants {
 
+   //Files should be stored in graphviz arch.dot
+   public enum OUTPUTS{
+        GENERATED,//generator
+        CLEANED,//pig
+        MAHOUT_CF_IN,//hive view over data for mahout
+        MAHOUT_CF,//mahout cf results 
+        CUSTOMER_PAGE//crunchhh
+    };
+    
+
 }

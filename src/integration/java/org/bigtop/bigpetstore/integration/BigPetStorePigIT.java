@@ -32,11 +32,6 @@ public class BigPetStorePigIT extends ITUtils{
 
     final static Logger log = LoggerFactory.getLogger(BigPetStorePigIT.class);
 
-    @After
-    public void tearDown() throws Exception {
-        //org.apache.commons.io.FileUtils.deleteDirectory(new File(test_data_directory));
-    }
-    
     @Before
     public void setupTest() throws Throwable {
         super.setup();

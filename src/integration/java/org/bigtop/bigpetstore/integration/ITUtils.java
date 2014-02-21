@@ -11,6 +11,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.Job;
 import org.bigtop.bigpetstore.generator.PetStoreJob;
 import org.bigtop.bigpetstore.generator.TransactionIteratorFactory.STATE;
+import org.bigtop.bigpetstore.util.BigPetStoreConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,26 +31,9 @@ public class ITUtils {
             
         }
     }
-    public static final Path GENERATED = new Path("/tmp/BigPetStoreTest/generated/").makeQualified(fs);
-    public static final Path PIG_OUT = new Path("/tmp/BigPetStoreTest/pig/").makeQualified(fs);
-    public static final Path CRUNCH_OUT = new Path("/tmp/BigPetStoreTest/crunch/").makeQualified(fs);
-    
-    /**
-     * A poor mans unit test for stochastic data:
-     * Verify that at least one product has valid amount.
-     */
-    public static boolean hasAProduct(Map<String,? extends Number> m){
-        for(STATE s : STATE.values()){
-            for(String p : s.products){
-                if(m.containsKey(p)){
-                    if(m.get(p).intValue()>0){
-                        return true;
-                }
-              }
-            }
-        }
-        return false;
-    }
+    public static final Path BPS_TEST_GENERATED = new Path("bps_integration_",BigPetStoreConstants.GENERATED).makeQualified(fs);
+    public static final Path BPS_TEST_PIG_CLEANED = new Path("bps_integration_",BigPetStoreConstants.CLEANED).makeQualified(fs);
+    //public static final Path CRUNCH_OUT = new Path("bps_integration_",BigPetStoreConstants.OUTPUT_3).makeQualified(fs);
     
     /**
      * Creates a generated input data set in 
@@ -69,14 +53,14 @@ public class ITUtils {
         /**
          * Only create if doesnt exist already.....
          */
-        if(FileSystem.getLocal(conf).exists(GENERATED)){
+        if(FileSystem.getLocal(conf).exists(BPS_TEST_GENERATED)){
             return;
         }
 
         /**
          * Create the data set.
          */
-        Job createInput= PetStoreJob.createJob(GENERATED, conf);
+        Job createInput= PetStoreJob.createJob(BPS_TEST_GENERATED, conf);
         createInput.waitForCompletion(true);
         
         Path outputfile = new Path(GENERATED,"part-r-00000");

@@ -25,6 +25,12 @@
  
 	<dependencies>
 	
+		<dependency>
+			<groupId>org.kohsuke</groupId>
+			<artifactId>graphviz-api</artifactId>
+			<version>1.0</version>
+		</dependency>
+            
 		<!--  
 		 CRUNCH : These are repeated in the profile and
 		 necessary for compilation even without the profile -->

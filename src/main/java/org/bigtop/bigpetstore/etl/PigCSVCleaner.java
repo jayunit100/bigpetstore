@@ -1,17 +1,11 @@
 package org.bigtop.bigpetstore.etl;
 
-import java.util.Iterator;
-import java.util.Map;
-
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.pig.ExecType;
 import org.apache.pig.PigServer;
-import org.apache.pig.data.Tuple;
-import org.bigtop.bigpetstore.contract.PetStoreStatistics;
-
-import com.google.common.collect.Maps;
 
 /**
  * This class operates by ETL'ing the dataset into pig, and then implements the
@@ -20,11 +14,13 @@ import com.google.common.collect.Maps;
  * The pigServer is persisted through the life of the class, so that the
  * intermediate data sets created in the constructor can be reused.
  */
-public class PigETL extends PetStoreStatistics {
+public class PigCSVCleaner  {
 
     PigServer pigServer;
-
-    public PigETL(String inputPath, String outputPath, ExecType ex)
+    
+    
+    
+    public PigCSVCleaner(Path inputPath, ExecType ex)
             throws Exception {
 
         System.out.println("input  " + inputPath);
@@ -47,7 +43,7 @@ public class PigETL extends PetStoreStatistics {
          * 1969,7.5,cat-food
          */
         pigServer.registerQuery("csvdata = LOAD '<i>' AS (ID,DETAILS);"
-                .replaceAll("<i>", inputPath));
+                .replaceAll("<i>", inputPath.toString()));
 
         /**
          * Now, we want to split the two tab delimited feidls into uniform
@@ -60,62 +56,10 @@ public class PigETL extends PetStoreStatistics {
                         + "FLATTEN" + "(STRSPLIT"
                         + "(ID,',',3)) AS (drop, code, transaction) ,"
                         + "FLATTEN" + "(STRSPLIT" +
-                        /**
-                         * Schema has to be defined here for any feilds which
-                         * are going to export as json!
-                         */
                         "(DETAILS,',',5)) AS (lname, fname, date, price, product:chararray);");
-
-        System.out.println(pigServer.dumpSchema("id_details"));
-        /**
-         * Total product sales by state:
-         * {"product":"dog treats (hard)","count":4}
-         */
-        pigServer
-                .registerQuery("transactions = FOREACH id_details GENERATE $0 .. ;");
-
-        pigServer
-                .registerQuery("transactionsG = group transactions by product;");
-
-        /**
-         * pigServer.registerQuery( "transactionsG = group transactions by ;");
-         */
-        pigServer.registerQuery(PROD_BY_PROD);
-        //lets see if we can store this...
-        if(outputPath != null){
-            System.out.println("Persisting results.");
-            pigServer.store("transactionsG","transaction_groups");
-            pigServer.store("PROD_BY_PROD","PROD_BY_PROD_output");
-        }
-    }
-
-    @Override
-    public Map<String, Integer> numberOfTransactionsByState() throws Exception {
-        throw new RuntimeException("not implemented yet");
-    }
-
-    public static String PROD_BY_PROD=
-            "PROD_BY_PROD  = foreach transactionsG {"
-            + "sym = transactions.product ;"
-            + "generate flatten(sym) as product:chararray, COUNT(sym) as count:long ;"
-            + "};";
-    
-    @Override
-    public Map<String, Integer> numberOfProductsByProduct() throws Exception {
-
-        pigServer
-                .registerQuery(PROD_BY_PROD);
-
-        System.out.println("Schema : " + pigServer.dumpSchema("uniqcnt"));
-
-        Iterator<Tuple> tuples = pigServer.openIterator("uniqcnt");
-        Map<String, Integer> ret = Maps.newHashMap();
-        while (tuples.hasNext()) {
-            Tuple t = tuples.next();
-            ret.put(t.get(0) + "", ((Number) t.get(1)).intValue());
-        }
-        // pigServer.store("uniqcnt", outputPath, "JsonStorage");
-        return ret;
+        
+        pigServer.store("id_details", "transactions-cleaned");
+        
     }
 
     public static void main(final String[] args) throws Exception {
@@ -137,11 +81,9 @@ public class PigETL extends PetStoreStatistics {
                     
                     @Override
                     public int run(String[] args) throws Exception {
-                        new PigETL(
-                                args[0],
-                                args[1],
+                        new PigCSVCleaner(
+                                new Path(args[0]),
                                 ExecType.MAPREDUCE);
-                 
                         return 0;
                     }
                 }, args);

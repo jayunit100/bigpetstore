@@ -1,32 +1,25 @@
 digraph ethane {
 
    node [shape=record];
-   CUSTOMER_PAGE [label="CUSTOMER_PAGE|json"];
-
-   DIRTY_CSV [label="DIRTY_CSV|fname   lname -prod , price ,prod,.."];
-
-   CSV [label="CSV|fname,lname,prod,price,date,xcoord,ycoord,..."];
-
-   PROD_REC [label="PROD_REC  | jay vyas, dogfood, .6"];
-
+   CUSTOMER_PAGE [label="CUSTOMER_PAGE|json|CUSTOMER_PAGE/part*"];
+   DIRTY_CSV [label="DIRTY_CSV|fname   lname -prod , price ,prod,..|GENERATED/part*"];
+   CSV [label="CSV|fname,lname,prod,price,date,xcoord,ycoord,...|CLEANED/part*"];
+   MAHOUT_VIEW_INPUT [label="MAHOUT_VIEW  | jay vyas, dogfood, .6 | MAHOUT_CF_IN/part*" ];
+   MAHOUT_CF [label="MAHOUT_CF  | jay vyas, recommended = dog leash, .6 | MAHOUT_CF/part*" ];
    PROD_HASH [shape=diamond label="PRODUCT->int"];   
    USER_HASH [shape=diamond label="USER->int"];
 
-
-MAHOUT_VIEW [label="CSV for MAHOUT | USER-INT,  PRODUCT-INT,  p-val"];
-
    Generate -> DIRTY_CSV ;
    DIRTY_CSV -> pig [label=""];  
-   
    
    pig -> CSV [label="clean records"];
    PROD_HASH -> pig [label="int val for collab classifier"];
    USER_HASH -> pig  [label="int val for collab classifier"];
    
    CSV -> hive ; 
-   hive -> MAHOUT_VIEW [label="select coordinates"];          
-    MAHOUT_VIEW -> mahout_collab_filter_recomender -> PROD_REC ;
-   PROD_REC  -> crunch
+   hive -> MAHOUT_VIEW_INPUT [label="select coordinates"];          
+   MAHOUT_VIEW_INPUT -> mahout_collab_filter_recomender -> MAHOUT_CF ;
+   MAHOUT_CF  -> crunch
    CSV -> crunch ; 
    crunch -> CUSTOMER_PAGE [label="high performance joining"];
 
