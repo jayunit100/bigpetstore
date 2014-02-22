@@ -53,7 +53,7 @@ public class HiveViewCreator implements Tool {
     @Override
     public int run(String[] args) throws Exception {
         Statement stmt = getConnection();
-        //stmt.execute("DROP TABLE IF EXISTS " + BigPetStoreConstants.OUTPUTS.MAHOUT_CF_IN.name());
+        stmt.execute("DROP TABLE IF EXISTS " + BigPetStoreConstants.OUTPUTS.MAHOUT_CF_IN.name());
         System.out.println("input data " + args[0]);
         System.out.println("output table " + args[1]);
         
@@ -80,7 +80,7 @@ public class HiveViewCreator implements Tool {
         //will change once we add hashes into pig ETL clean
         String create2 = 
                 "create table "+outTableName+" as select state from "+inTableName;
-        System.out.println("out table= " + create2 + );
+        System.out.println("out table= " + create2  );
         res = stmt.executeQuery(create2);
     
         System.out.println("result = "+res.first());
