@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.util.Tool;
 import org.bigtop.bigpetstore.contract.PetStoreStatistics;
@@ -20,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Maps;
+import com.google.protobuf.UnknownFieldSet.Field;
 
 /**
  * Note on running locally:
@@ -51,12 +53,15 @@ public class HiveViewCreator implements Tool {
     @Override
     public int run(String[] args) throws Exception {
         Statement stmt = getConnection();
-        stmt.execute("DROP TABLE " + BigPetStoreConstants.OUTPUTS.MAHOUT_CF_IN.name());
+        //stmt.execute("DROP TABLE IF EXISTS " + BigPetStoreConstants.OUTPUTS.MAHOUT_CF_IN.name());
         System.out.println("input data " + args[0]);
         System.out.println("output table " + args[1]);
         
-        String inputTableName = "cleaned"+System.currentTimeMillis();
-        String create = "CREATE EXTERNAL TABLE "+inputTableName+" ("
+        Path inTablePath =  new Path(args[0]);
+        String inTableName = "cleaned"+System.currentTimeMillis();
+        String outTableName = BigPetStoreConstants.OUTPUTS.MAHOUT_CF_IN.name();
+
+        final String create = "CREATE EXTERNAL TABLE "+inTableName+" ("
                 + "  state STRING,"
                 + "  trans_id STRING,"
                 + "  lname STRING,"
@@ -65,16 +70,18 @@ public class HiveViewCreator implements Tool {
                 + "  price STRING,"
                 + "  product STRING"
                 + ") ROW FORMAT "
-                + "DELIMITED FIELDS TERMINATED BY '\t'"
-                + "LINES TERMINATED BY '\n'"
+                + "DELIMITED FIELDS TERMINATED BY '\t' "
+                + "LINES TERMINATED BY '\n' "
                 + "STORED AS TEXTFILE "
-                + "LOCATION "+args[0]+")";
+                + "LOCATION '"+inTablePath+"'";
         
         ResultSet res = stmt.executeQuery(create);
 
         //will change once we add hashes into pig ETL clean
-        res = stmt.executeQuery(
-               "create table "+args[1]+" as select state from tableLocation");
+        String create2 = 
+                "create table "+outTableName+" as select state from "+inTableName;
+        System.out.println("out table= " + create2 + );
+        res = stmt.executeQuery(create2);
     
         System.out.println("result = "+res.first());
 
