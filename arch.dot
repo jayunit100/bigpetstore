@@ -23,6 +23,5 @@ digraph ethane {
    CSV -> crunch ; 
    crunch -> CUSTOMER_PAGE [label="high performance joining"];
 
-   
 }
         
