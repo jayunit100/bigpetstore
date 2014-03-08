@@ -50,7 +50,7 @@ public class BigPetStorePigIT extends ITUtils{
                 BPS_TEST_PIG_CLEANED, 
                 new Function<String, Boolean>(){
                     public Boolean apply(String x){
-                        System.out.println("Verify " + x);
+                        //System.out.println("Verified...");
                         return true;
                     }
                 });
@@ -65,7 +65,10 @@ public class BigPetStorePigIT extends ITUtils{
             System.out.println(stat.getPath() +"  " + stat.getLen());
         }
 
-        Path p = new Path(base,"part-r-00000");
+        /**
+         * EXPECTING MAP ONLY... may change.
+         */
+        Path p = new Path(base,"part-m-00000");
         BufferedReader r =
                 new BufferedReader(
                         new InputStreamReader(fs.open(p)));
@@ -74,7 +77,7 @@ public class BigPetStorePigIT extends ITUtils{
         while(r.ready()){
             String line = r.readLine();
             log.info("line:"+line);
-            System.out.println("line:"+line);
+            //System.out.println("line:"+line);
             Assert.assertTrue("validationg line : " + line, validator.apply(line));
         }
     }

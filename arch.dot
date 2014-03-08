@@ -9,15 +9,15 @@ digraph ethane {
    PROD_HASH [shape=diamond label="PRODUCT->int"];   
    USER_HASH [shape=diamond label="USER->int"];
 
-   Generate -> DIRTY_CSV ;
+   Generate -> DIRTY_CSV [label="hadoop jar bigpetstore.jar org.bigtop.bigpetstore.generator.BPSGenerator 100 bps/generated/"] ;
    DIRTY_CSV -> pig [label=""];  
    
-   pig -> CSV [label="clean records"];
+   pig -> CSV [label="hadoop jar bigpetstore.jar org.bigtop.bigpetstore.etl.PigCSVCleaner bps/generated/ bps/pig_out/"];
    PROD_HASH -> pig [label="int val for collab classifier"];
    USER_HASH -> pig  [label="int val for collab classifier"];
    
    CSV -> hive ; 
-   hive -> MAHOUT_VIEW_INPUT [label="select coordinates"];          
+   hive -> MAHOUT_VIEW_INPUT [label="hadoop jar bigpetstore.jar org.bigtop.bigpetstore.etl.HiveViewCreator bps/pig_out mahout_view"];          
    MAHOUT_VIEW_INPUT -> mahout_collab_filter_recomender -> MAHOUT_CF ;
    MAHOUT_CF  -> crunch
    CSV -> crunch ; 

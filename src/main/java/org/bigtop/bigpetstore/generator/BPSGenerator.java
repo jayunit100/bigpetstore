@@ -14,6 +14,7 @@ import org.apache.hadoop.mapreduce.Mapper.Context;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.bigtop.bigpetstore.util.BigPetStoreConstants;
+import org.bigtop.bigpetstore.util.DeveloperTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,9 +28,9 @@ import org.slf4j.LoggerFactory;
  * 1KB set bigpetstore_records=10 1MB set bigpetstore_records=10,000 1GB set
  * bigpetstore_records=10,000,000 1TB set bigpetstore_records=10,000,000,000
  */
-public class PetStoreJob {
+public class BPSGenerator {
 
-    final static Logger log = LoggerFactory.getLogger(PetStoreJob.class);
+    final static Logger log = LoggerFactory.getLogger(BPSGenerator.class);
 
     public enum props {
         // bigpetstore_splits,
@@ -48,7 +49,7 @@ public class PetStoreJob {
                 + System.currentTimeMillis());
         // recursively delete the data set if it exists.
         FileSystem.get(conf).delete(output, true);
-        job.setJarByClass(PetStoreJob.class);
+        job.setJarByClass(BPSGenerator.class);
         job.setMapperClass(MyMapper.class);
         // use the default reducer
         // job.setReducerClass(PetStoreTransactionGeneratorJob.Red.class);
@@ -85,6 +86,11 @@ public class PetStoreJob {
             System.exit(0);
         } else {
             Configuration conf = new Configuration();
+            DeveloperTools.validate(
+                    args, 
+                    "# of records",
+                    "output path");
+
             conf.setInt(
                     GeneratePetStoreTransactionsInputFormat.props.bigpetstore_records.name(), 
                     Integer.parseInt(args[0]));

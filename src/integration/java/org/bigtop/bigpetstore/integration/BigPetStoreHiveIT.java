@@ -15,7 +15,7 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.pig.ExecType;
 import org.bigtop.bigpetstore.etl.HiveViewCreator;
 import org.bigtop.bigpetstore.etl.PigCSVCleaner;
-import org.bigtop.bigpetstore.generator.PetStoreJob;
+import org.bigtop.bigpetstore.generator.BPSGenerator;
 import org.bigtop.bigpetstore.integration.ITUtils;
 import org.bigtop.bigpetstore.util.BigPetStoreConstants;
 import org.json.JSONException;

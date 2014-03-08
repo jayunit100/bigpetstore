@@ -5,36 +5,34 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.permission.FsPermission;
+
 /*
  * just a simple utility class to generate different type of data files for testing
  */
 public class DeveloperTools {
+    
+    public static void validate(String[] args, String... expected) {
 
-    File hiveConfigData;
+        try{ 
+            for(int i = 0 ; i < expected.length ; i++) {
+                System.out.println("VALUE OF " + expected[i] + " = " + args[i]);
+            }
+        }
+        catch(Throwable t) {
+            System.out.println("Error parsing arguments.");
+            System.out.println("We expect " + expected.length + " arguments for this phase.");
+        }
+        
+        
+    }
+    public static void main(String[] args) throws Exception {
 
-    public static void main(String[] args) throws IOException {
-
-        DeveloperTools tools = new DeveloperTools();
-        tools.createInitialData();
-
+        FsPermission p = FsPermission.createImmutable((short)0755);
+        System.out.println(p.getUserAction()+" " + p.getGroupAction() + " " + p.getOtherAction());
+    
+        FileSystem fs = FileSystem.get(null);
     }
 
-    private void createInitialData() throws IOException {
-        File hiveConfigData = new File("hiveTestData/a.txt");
-        String delim = ",";
-        if (!hiveConfigData.exists()) {
-            hiveConfigData.createNewFile();
-        }
-        FileWriter fw = new FileWriter(hiveConfigData);
-        BufferedWriter bw = new BufferedWriter(fw);
-        for (int k = 0; k < 10; k++) {
-            String line = k + delim + "this is the " + k + "th description\n";
-            bw.write(line);
-        }
-        // easy to forget to flush the stream
-        bw.flush();
-        fw.flush();
-        fw.close();
-
-    }
 }

@@ -13,7 +13,7 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.Job;
 import org.bigtop.bigpetstore.generator.TransactionIteratorFactory.STATE;
-import org.bigtop.bigpetstore.generator.PetStoreJob.props;
+import org.bigtop.bigpetstore.generator.BPSGenerator.props;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +47,7 @@ public class TestPetStoreTransactionGeneratorJob {
          * Run the job
          */
         Path output = new Path("petstoredata/" + (new Date()).toString());
-        Job createInput = PetStoreJob.createJob(output, c);
+        Job createInput = BPSGenerator.createJob(output, c);
         createInput.waitForCompletion(true);
 
         FileSystem fs = FileSystem.getLocal(new Configuration());

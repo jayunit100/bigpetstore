@@ -2,9 +2,11 @@ package org.bigtop.bigpetstore.etl;
 
 import java.util.Map;
 
+import org.apache.crunch.FilterFn;
 import org.apache.crunch.MapFn;
 import org.apache.crunch.PCollection;
 import org.apache.crunch.PTable;
+import org.apache.crunch.Pair;
 import org.apache.crunch.Pipeline;
 import org.apache.crunch.impl.mem.MemPipeline;
 import org.apache.crunch.impl.mr.MRPipeline;
@@ -67,6 +69,7 @@ public class CrunchETL extends PetStoreStatistics {
         PTable<String, Long> counts = lineItems.parallelDo(COUNT_BY_STATE,
                 Avros.strings()).count();
         Map m = counts.materializeToMap();
+        
         System.out.println("Crunch:::  " + m);
         return m;
     }
@@ -101,6 +104,8 @@ public class CrunchETL extends PetStoreStatistics {
 
         PCollection<String> lines = pipeline.read(From.textFile(new Path(
                 "/tmp/BigPetStore1388719888255/generated/part-r-00000")));
+        
+        
         PCollection<LineItem> lineItems = lines.parallelDo(
                 new MapFn<String, LineItem>() {
                     @Override

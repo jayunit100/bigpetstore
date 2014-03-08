@@ -8,7 +8,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.Job;
-import org.bigtop.bigpetstore.generator.PetStoreJob;
+import org.bigtop.bigpetstore.generator.BPSGenerator;
 import org.bigtop.bigpetstore.util.BigPetStoreConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +55,7 @@ public class ITUtils {
          * Setup configuration with prop.
          */
         Configuration conf = new Configuration();
-        conf.setInt(PetStoreJob.props.bigpetstore_records.name(), records);
+        conf.setInt(BPSGenerator.props.bigpetstore_records.name(), records);
         
         /**
          * Only create if doesnt exist already.....
@@ -67,7 +67,7 @@ public class ITUtils {
         /**
          * Create the data set.
          */
-        Job createInput= PetStoreJob.createJob(BPS_TEST_GENERATED, conf);
+        Job createInput= BPSGenerator.createJob(BPS_TEST_GENERATED, conf);
         createInput.waitForCompletion(true);
         
         Path outputfile = new Path(BPS_TEST_GENERATED,"part-r-00000");

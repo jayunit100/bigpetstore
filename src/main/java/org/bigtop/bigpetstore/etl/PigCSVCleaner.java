@@ -7,11 +7,10 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.pig.ExecType;
 import org.apache.pig.PigServer;
+import org.bigtop.bigpetstore.util.DeveloperTools;
 
 /**
- * This class operates by ETL'ing the dataset into pig, and then implements the
- * "statistics" contract in the functions which follow.
- * 
+ * This class operates by ETL'ing the dataset into pig.
  * The pigServer is persisted through the life of the class, so that the
  * intermediate data sets created in the constructor can be reused.
  */
@@ -89,6 +88,10 @@ public class PigCSVCleaner  {
                     
                     @Override
                     public int run(String[] args) throws Exception {
+                        DeveloperTools.validate(
+                                args, 
+                                "generated data directory",
+                                "pig output directory");
                         new PigCSVCleaner(
                                 new Path(args[0]),
                                 new Path(args[1]),

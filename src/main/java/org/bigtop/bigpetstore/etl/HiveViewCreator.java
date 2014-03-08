@@ -24,6 +24,13 @@ import com.google.common.collect.Maps;
 import com.google.protobuf.UnknownFieldSet.Field;
 
 /**
+ * 
+ * Hive View creator is designed to read from Pigs cleaned output.
+ * The basic strategy is:
+ * 
+ * 1) store pig output as a hive table
+ * 2) use "select .. as" to select a subset 
+ * 
  * Note on running locally:
  * 
  * 1) Local mode requires a hive and hadoop tarball, with HIVE_HOME and
@@ -50,6 +57,12 @@ public class HiveViewCreator implements Tool {
         return conf;
     }
 
+    /**
+     * Input args:
+     *  Cleaned data files from pig (tsv)
+     *  Ouptut table (desired path to mahout input data set)
+     *  
+     */
     @Override
     public int run(String[] args) throws Exception {
         Statement stmt = getConnection();
