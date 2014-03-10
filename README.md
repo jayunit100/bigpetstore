@@ -22,7 +22,6 @@ Build Instructions
 
 mvn clean package will build the bigpetstore jar
 
-
 * Run Intergration tests with
 
   * Pig profile: mvn clean verify -P pig
@@ -32,6 +31,18 @@ mvn clean package will build the bigpetstore jar
      stand what it does.
      
      * mvn clean verify -P crunch
+
+For Eclipse Users
+-----------------
+
+1) run "mvn eclipse:eclipse" to create an IDE loadable project.
+
+2) open .classpath and add
+    `<classpathentry kind="src" path="src/integration/java" including="**/*.java"/>`
+
+3) import the project into eclipse
+
+
 
 
 High level summary
@@ -58,7 +69,6 @@ its output.  The result is a list of "transactions".  Each transaction is a tupl
 
   *{state,name,date,price,product}.*
 
-
 * Phase 2: Processing the data
 
 The next phase of the application processes the data to create basic aggregations.
@@ -76,19 +86,44 @@ For example with both pig and hive these could easily include
 
 * Phase 4: Visualizing the Data in D3.
 
+RUNNING
+-------
 
-For Eclipse Users
------------------
+Example of running in EMR:
 
+- Put the jar in s3.  Right now there is a copy of it at the url below.
 
-1) run "mvn eclipse:eclipse" to create an IDE loadable project.
+- Download the elastic-mapreduce ruby shell script. 
+create your "credentials.json" file. 
 
-2) open .classpath and add
-    `<classpathentry kind="src" path="src/integration/java" including="**/*.java"/>`
+Now run this to generate 1,000,000 pet store transactions: 
 
-3) import the project into eclipse
+./elastic-mapreduce --create --jar s3://bigpetstore/bigpetstore.jar \
+--main-class org.bigtop.bigpetstore.generator.BPSGenerator \
+--num-instances 10 --arg 1000000 \
+--arg s3://bigpetstore/output \
+--hadoop-version "2.2.0"  \
+--master-instance-type m1.medium \
+--slave-instance-type m1.medium
 
+- Go on processing the data: 
 
+./elastic-mapreduce --create --jar s3://bigpetstore/bigpetstore.jar \
+--main-class org.bigtop.bigpetstore.generator.BPSGenerator \
+--num-instances 10  \
+--arg 1000000 \
+--arg s3://bigpetstore/data/generated \
+--hadoop-version "2.2.0"  \
+--master-instance-type m1.medium \
+--slave-instance-type m1.medium
 
+... 
 
+Replace the above "main-class", and "--arg" options with
+--main-class org.bigtop.bigpetstore.etl.PigCSVCleaner 
+--arg s3://bigpetstore/data/generated
+--arg s3://bigpetstore/data/pig_out
 
+... 
+
+And so on. 

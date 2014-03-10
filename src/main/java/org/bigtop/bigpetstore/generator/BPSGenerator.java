@@ -48,7 +48,7 @@ public class BPSGenerator {
         Job job = new Job(conf, "PetStoreTransaction_ETL_"
                 + System.currentTimeMillis());
         // recursively delete the data set if it exists.
-        FileSystem.get(conf).delete(output, true);
+        FileSystem.get(output.toUri(),conf).delete(output, true);
         job.setJarByClass(BPSGenerator.class);
         job.setMapperClass(MyMapper.class);
         // use the default reducer

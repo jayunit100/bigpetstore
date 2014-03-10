@@ -21,7 +21,7 @@ public class PigCSVCleaner  {
     public PigCSVCleaner(Path inputPath, Path outputPath, ExecType ex)
             throws Exception {
 
-        FileSystem fs = FileSystem.get(new Configuration());
+        FileSystem fs = FileSystem.get(inputPath.toUri(), new Configuration());
         
         if(! fs.exists(inputPath)){
             throw new RuntimeException("INPUT path DOES NOT exist : " + inputPath);
