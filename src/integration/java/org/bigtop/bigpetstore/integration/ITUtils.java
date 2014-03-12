@@ -21,21 +21,6 @@ import com.google.common.io.Files;
 
 public class ITUtils {
     
-    static {
-        try {
-            InetAddress addr = java.net.InetAddress.getLocalHost();
-            System.out.println("Localhost = hn=" + addr.getHostName() +" / ha="+addr.getHostAddress());
-        } 
-        catch (Throwable e) {
-            e.printStackTrace();
-            throw new RuntimeException(
-            " ERROR : Hadoop wont work at all  on this machine yet"+
-            "...I can't get / resolve localhost ! Check java version/ " +
-            "/etc/hosts / DNS or other networking related issues on your box" + 
-            e.getMessage());
-        }
-    }
-    
     static final Logger log = LoggerFactory.getLogger(ITUtils.class);
     
     static FileSystem fs;
@@ -72,7 +57,18 @@ public class ITUtils {
         if(! conf.get("fs.AbstractFileSystem.file.impl").contains("Local")) {
             throw new RuntimeException("ERROR: bad conf : " + "mapreduce.jobtracker.address");
         }
-        
+        try {
+            InetAddress addr = java.net.InetAddress.getLocalHost();
+            System.out.println("Localhost = hn=" + addr.getHostName() +" / ha="+addr.getHostAddress());
+        } 
+        catch (Throwable e) {
+            e.printStackTrace();
+            throw new RuntimeException(
+            " ERROR : Hadoop wont work at all  on this machine yet"+
+            "...I can't get / resolve localhost ! Check java version/ " +
+            "/etc/hosts / DNS or other networking related issues on your box" + 
+            e.getMessage());
+        }
     }
 
     
