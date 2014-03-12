@@ -1,6 +1,7 @@
 package org.bigtop.bigpetstore.integration;
 
 
+import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.util.List;
 
@@ -55,6 +56,7 @@ public class ITUtils {
          * Setup configuration with prop.
          */
         Configuration conf = new Configuration();
+        conf.dumpConfiguration(conf, new PrintWriter(System.out));
         conf.setInt(BPSGenerator.props.bigpetstore_records.name(), records);
         
         /**
