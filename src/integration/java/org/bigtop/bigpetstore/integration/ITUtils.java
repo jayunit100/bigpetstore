@@ -50,7 +50,6 @@ public class ITUtils {
      * these arent designed to be run against a distribtued system.
      */
     public static void checkConf(Configuration conf) throws Exception { 
-        conf.dumpConfiguration(conf, new PrintWriter(System.out));
         if(! conf.get("mapreduce.jobtracker.address").equals("local")) {
             throw new RuntimeException("ERROR: bad conf : " + "mapreduce.jobtracker.address");
         }
@@ -62,6 +61,7 @@ public class ITUtils {
             System.out.println("Localhost = hn=" + addr.getHostName() +" / ha="+addr.getHostAddress());
         } 
         catch (Throwable e) {
+            conf.dumpConfiguration(conf, new PrintWriter(System.out));
             e.printStackTrace();
             throw new RuntimeException(
             " ERROR : Hadoop wont work at all  on this machine yet"+
