@@ -2,6 +2,8 @@ package org.bigtop.bigpetstore.integration;
 
 
 import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.util.List;
 
@@ -18,6 +20,21 @@ import com.google.common.io.Files;
 
 
 public class ITUtils {
+    
+    static {
+        try {
+            InetAddress addr = java.net.InetAddress.getLocalHost();
+            System.out.println("Localhost = hn=" + addr.getHostName() +" / ha="+addr.getHostAddress());
+        } 
+        catch (Throwable e) {
+            e.printStackTrace();
+            throw new RuntimeException(
+            " ERROR : Hadoop wont work at all  on this machine yet"+
+            "...I can't get / resolve localhost ! Check java version/ " +
+            "/etc/hosts / DNS or other networking related issues on your box" + 
+            e.getMessage());
+        }
+    }
     
     static final Logger log = LoggerFactory.getLogger(ITUtils.class);
     
@@ -42,6 +59,22 @@ public class ITUtils {
         
     }
     //public static final Path CRUNCH_OUT = new Path("bps_integration_",BigPetStoreConstants.OUTPUT_3).makeQualified(fs);
+
+    /**
+     * Some simple checks to make sure that unit tests in local FS.
+     * these arent designed to be run against a distribtued system.
+     */
+    public static void checkConf(Configuration conf) throws Exception { 
+        conf.dumpConfiguration(conf, new PrintWriter(System.out));
+        if(! conf.get("mapreduce.jobtracker.address").equals("local")) {
+            throw new RuntimeException("ERROR: bad conf : " + "mapreduce.jobtracker.address");
+        }
+        if(! conf.get("fs.AbstractFileSystem.file.impl").contains("Local")) {
+            throw new RuntimeException("ERROR: bad conf : " + "mapreduce.jobtracker.address");
+        }
+        
+    }
+
     
     /**
      * Creates a generated input data set in 
@@ -56,7 +89,11 @@ public class ITUtils {
          * Setup configuration with prop.
          */
         Configuration conf = new Configuration();
-        conf.dumpConfiguration(conf, new PrintWriter(System.out));
+
+        //debugging for jeff and others in local fs
+        //that wont build
+        checkConf(conf);
+
         conf.setInt(BPSGenerator.props.bigpetstore_records.name(), records);
         
         /**
