@@ -88,7 +88,9 @@ Running on a hadoop cluster
 ---------------------------
 
 wget s3://bigpetstore/bigpetstore.jar
+
 hadoop bigpetstore.jar org.bigtop.bigpetstore.generator.BPSGenerator 1000000 bigpetstore/gen
+
 hadoop bigpetstore.jar org.bigtop.bigpetstore.etl.PigCSVCleaner gen/ pig/ custom_pigscript.pig
 ... (will add more steps as we add more phases to the workflow) ...
 
