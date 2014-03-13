@@ -30,7 +30,7 @@ mvn clean package will build the bigpetstore jar
      * First, see and run the setuphive.sh script.  Read it and try to under
      stand what it does.
      
-     * mvn clean verify -P crunch
+     * mvn clean verify -P pig
 
 For Eclipse Users
 -----------------
@@ -41,8 +41,6 @@ For Eclipse Users
     `<classpathentry kind="src" path="src/integration/java" including="**/*.java"/>`
 
 3) import the project into eclipse
-
-
 
 
 High level summary
@@ -86,11 +84,17 @@ For example with both pig and hive these could easily include
 
 * Phase 4: Visualizing the Data in D3.
 
-RUNNING
--------
+Running on a hadoop cluster
+---------------------------
 
-Example of running in EMR:
+wget s3://bigpetstore/bigpetstore.jar
+hadoop bigpetstore.jar org.bigtop.bigpetstore.generator.BPSGenerator 1000000 bigpetstore/gen
+hadoop bigpetstore.jar org.bigtop.bigpetstore.etl.PigCSVCleaner gen/ pig/ custom_pigscript.pig
+... (will add more steps as we add more phases to the workflow) ...
 
+
+Example of running in EMR
+--------------------------
 - Put the jar in s3.  Right now there is a copy of it at the url below.
 
 - Download the elastic-mapreduce ruby shell script. 
@@ -123,6 +127,9 @@ Replace the above "main-class", and "--arg" options with
 --main-class org.bigtop.bigpetstore.etl.PigCSVCleaner 
 --arg s3://bigpetstore/data/generated
 --arg s3://bigpetstore/data/pig_out
+(note about pig: We support custom pig scripts.... for EMR, custom pig scripts will need to point to a 
+local path, so youll have to put that script on the machine as part
+of EMR setup w/ a custom script).
 
 ... 
 
