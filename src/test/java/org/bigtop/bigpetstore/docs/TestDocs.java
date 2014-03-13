@@ -20,11 +20,11 @@ public class TestDocs {
         
         org.junit.Assert.assertTrue(
                 graphviz.contains(
-                        OUTPUTS.GENERATED.name()));
+                        OUTPUTS.generated.name()));
 
         org.junit.Assert.assertTrue(
                 graphviz.contains(
-                        OUTPUTS.CLEANED.name()));
+                        OUTPUTS.cleaned.name()));
     
         
     }

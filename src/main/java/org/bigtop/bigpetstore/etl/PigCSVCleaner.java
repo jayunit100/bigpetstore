@@ -1,5 +1,9 @@
 package org.bigtop.bigpetstore.etl;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -18,7 +22,7 @@ public class PigCSVCleaner  {
 
     PigServer pigServer;
     
-    public PigCSVCleaner(Path inputPath, Path outputPath, ExecType ex)
+    public PigCSVCleaner(Path inputPath, Path outputPath, ExecType ex, File... scripts)
             throws Exception {
 
         FileSystem fs = FileSystem.get(inputPath.toUri(), new Configuration());
@@ -65,8 +69,25 @@ public class PigCSVCleaner  {
         
         pigServer.store("id_details", outputPath.toString());
         
+        /**
+         * Now we run scripts... this is where you can add some 
+         * arbitrary analytics.
+         */
+        for(File script : scripts) {
+            pigServer.registerScript(script.getAbsolutePath());
+        }
     }
 
+    private static File[] files(String[] args,int startIndex) {
+        List<File> files = new ArrayList<File>();
+        for(int i = startIndex ; i < args.length ; i++) {
+            File f = new File(args[i]);
+            if(! f.exists()) {
+                throw new RuntimeException("Pig script arg " + i+ " " + f.getAbsolutePath() + " not found. ");
+            }
+        }
+        return files.toArray(new File[]{});
+    }
     public static void main(final String[] args) throws Exception {
         System.out.println("Starting pig etl " + args.length);
 
@@ -95,7 +116,8 @@ public class PigCSVCleaner  {
                         new PigCSVCleaner(
                                 new Path(args[0]),
                                 new Path(args[1]),
-                                ExecType.MAPREDUCE);
+                                ExecType.MAPREDUCE,
+                                files(args,2));
                         return 0;
                     }
                 }, args);

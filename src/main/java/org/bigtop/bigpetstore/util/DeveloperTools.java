@@ -13,11 +13,11 @@ import org.apache.hadoop.fs.permission.FsPermission;
  */
 public class DeveloperTools {
     
-    public static void validate(String[] args, String... expected) {
+    public static void validate(String[] minargs, String... expected) {
 
         try{ 
-            for(int i = 0 ; i < expected.length ; i++) {
-                System.out.println("VALUE OF " + expected[i] + " = " + args[i]);
+            for(int i = 0 ; i < minargs.length ; i++) {
+                System.out.println("VALUE OF " + expected[i] + " = " + minargs[i]);
             }
         }
         catch(Throwable t) {

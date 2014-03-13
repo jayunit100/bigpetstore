@@ -34,9 +34,11 @@ public class ITUtils {
         }
     }
     public static final Path BPS_TEST_GENERATED = fs.makeQualified(
-            new Path("bps_integration_",BigPetStoreConstants.OUTPUTS.GENERATED.name())) ;
+            new Path("bps_integration_",BigPetStoreConstants.OUTPUTS.generated.name())) ;
+
     public static final Path BPS_TEST_PIG_CLEANED = fs.makeQualified(
-            new Path("bps_integration_",BigPetStoreConstants.OUTPUTS.CLEANED.name()));
+            new Path("bps_integration_",BigPetStoreConstants.OUTPUTS.cleaned.name()));
+
     public static final Path BPS_TEST_MAHOUT_IN = fs.makeQualified(
             new Path("bps_integration_",BigPetStoreConstants.OUTPUTS.MAHOUT_CF_IN.name()));
 
@@ -61,8 +63,6 @@ public class ITUtils {
             System.out.println("Localhost = hn=" + addr.getHostName() +" / ha="+addr.getHostAddress());
         } 
         catch (Throwable e) {
-            conf.dumpConfiguration(conf, new PrintWriter(System.out));
-            e.printStackTrace();
             throw new RuntimeException(
             " ERROR : Hadoop wont work at all  on this machine yet"+
             "...I can't get / resolve localhost ! Check java version/ " +

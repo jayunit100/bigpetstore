@@ -10,8 +10,9 @@ public class BigPetStoreConstants {
 
    //Files should be stored in graphviz arch.dot
    public enum OUTPUTS{
-        GENERATED,//generator
-        CLEANED,//pig
+        generated,//generator
+        cleaned,//pig
+        BPS_TEST_PIG_COUNT_PRODUCTS,
         MAHOUT_CF_IN,//hive view over data for mahout
         MAHOUT_CF,//mahout cf results 
         CUSTOMER_PAGE//crunchhh
