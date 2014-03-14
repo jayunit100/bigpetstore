@@ -1,0 +1,24 @@
+{
+  "name": "BigPetStore",
+  "version": "0.0.1",
+  "homepage": "https://github.com/jayunit100/bigpetstore",
+  "authors": [
+    "Matt Fenwick <mfenwick100@gmail.com>",
+    "Jay Vyas"
+  ],
+  "description": "visualization of BigPetStore data analytics",
+  "keywords": [
+    "big",
+    "data"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "deps"
+  ],
+  "dependencies": {
+    "jquery": "1.9.1",
+    "requirejs": "2.1.5"
+  }
+}
+
