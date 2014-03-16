@@ -1,10 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 
 	<groupId>BigPetStorePro</groupId>
 	<artifactId>BigPetStorePro</artifactId>
 	<version>1.1-SNAPSHOT</version>
+
+	<distributionManagement>
+		<repository>
+			<id>maven-s3-release-repo</id>
+			<name>S3 Release Repository</name>
+			<url>s3://bigpetstore/maven</url>
+		</repository>
+	</distributionManagement>
+
+	<scm>
+		<connection>scm:git:git@github.com:jayunit100/bigpetstore.git</connection>
+		<url>scm:git:git@github.com:jayunit100/bigpetstore.git</url>
+		<developerConnection>scm:git:git@github.com:jayunit100/bigpetstore.git</developerConnection>
+	</scm>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -21,23 +37,22 @@
 		<bonecp.version>0.8.0.RELEASE</bonecp.version>
 		<derby.version>10.10.1.1</derby.version>
 	</properties>
- 
+
 	<dependencies>
-	
+
 		<dependency>
 			<groupId>org.kohsuke</groupId>
 			<artifactId>graphviz-api</artifactId>
 			<version>1.0</version>
 		</dependency>
-            
-		<!--  
-		 CRUNCH : These are repeated in the profile and
-		 necessary for compilation even without the profile -->
-				<dependency>
-					<groupId>org.apache.crunch</groupId>
-					<artifactId>crunch-core</artifactId>
-					<version>0.9.0-hadoop2</version>
-				</dependency>
+
+		<!-- CRUNCH : These are repeated in the profile and necessary for compilation 
+			even without the profile -->
+		<dependency>
+			<groupId>org.apache.crunch</groupId>
+			<artifactId>crunch-core</artifactId>
+			<version>0.9.0-hadoop2</version>
+		</dependency>
 
 		<!-- misc deps -->
 		<dependency>
@@ -51,13 +66,8 @@
 			<artifactId>derby</artifactId>
 			<version>${derby.version}</version>
 		</dependency>
-		<!--
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.1</version>
-		</dependency>
-		--> 
+		<!-- <dependency> <groupId>org.apache.commons</groupId> <artifactId>commons-lang3</artifactId> 
+			<version>3.1</version> </dependency> -->
 
 		<dependency>
 			<groupId>com.google.guava</groupId>
@@ -189,16 +199,29 @@
 	</dependencies>
 
 	<build>
+		<extensions>
+			<extension>
+				<groupId>org.springframework.build.aws</groupId>
+				<artifactId>org.springframework.build.aws.maven</artifactId>
+			     <version>3.0.0.RELEASE</version>
+			</extension>
+		</extensions>
 		<finalName>bigpetstore-${version}</finalName>
 		<plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-eclipse-plugin</artifactId>
-                <configuration>
-                    <downloadSources>true</downloadSources>
-                    <downloadJavadocs>true</downloadJavadocs>
-                </configuration>
-            </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.5</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<configuration>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>true</downloadJavadocs>
+				</configuration>
+			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -216,17 +239,17 @@
 					<outputDirectory>${basedir}/target</outputDirectory>
 				</configuration>
 			</plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>**/*TestPig.java</exclude>
-                        <exclude>**/*TestHiveEmbedded.java</exclude>
-                        <exclude>**/*TestCrunch.java</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>**/*TestPig.java</exclude>
+						<exclude>**/*TestHiveEmbedded.java</exclude>
+						<exclude>**/*TestCrunch.java</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -272,14 +295,8 @@
 					<artifactId>hadoop-client</artifactId>
 					<version>${hadoop.version}</version>
 				</dependency>
-<!--
-				<dependency>
-					<groupId>org.apache.mrunit</groupId>
-					<artifactId>mrunit</artifactId>
-					<version>1.0.0</version>
-					<classifier>hadoop2</classifier>
-				</dependency>
-  -->
+				<!-- <dependency> <groupId>org.apache.mrunit</groupId> <artifactId>mrunit</artifactId> 
+					<version>1.0.0</version> <classifier>hadoop2</classifier> </dependency> -->
 			</dependencies>
 
 			<build>
@@ -289,46 +306,46 @@
 						<artifactId>maven-surefire-plugin</artifactId>
 						<configuration>
 
-                                <excludes>
-                                    <exclude>**/*TestPig.java</exclude>
-                                    <exclude>**/*TestHiveEmbedded.java</exclude>
-                                    <exclude>**/*TestCrunch.java</exclude>
-                                    <exclude>**/*TestPetStoreTransactionGeneratorJob.java</exclude>
-                                </excludes>
+							<excludes>
+								<exclude>**/*TestPig.java</exclude>
+								<exclude>**/*TestHiveEmbedded.java</exclude>
+								<exclude>**/*TestCrunch.java</exclude>
+								<exclude>**/*TestPetStoreTransactionGeneratorJob.java</exclude>
+							</excludes>
 
 						</configuration>
 					</plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>build-helper-maven-plugin</artifactId>
-                        <version>1.5</version>
-                        <executions>
-                            <execution>
-                                <id>add-test-source</id>
-                                <phase>generate-test-sources</phase>
-                                <goals>
-                                    <goal>add-test-source</goal>
-                                </goals>
-                                <configuration>
-                                    <sources>
-                                        <source>src/integration/java</source>
-                                    </sources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>build-helper-maven-plugin</artifactId>
+						<version>1.5</version>
+						<executions>
+							<execution>
+								<id>add-test-source</id>
+								<phase>generate-test-sources</phase>
+								<goals>
+									<goal>add-test-source</goal>
+								</goals>
+								<configuration>
+									<sources>
+										<source>src/integration/java</source>
+									</sources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-failsafe-plugin</artifactId>
 						<version>2.12</version>
 
-                        <configuration>
-                            <argLine>-Xmx1g</argLine> 
-                            <excludes>
-                                <exclude>**/*BigPetStoreHiveIT.java</exclude>
-                                <exclude>**/*BigPetStoreCrunchIT.java</exclude>
-                            </excludes>
-                        </configuration>
+						<configuration>
+							<argLine>-Xmx1g</argLine>
+							<excludes>
+								<exclude>**/*BigPetStoreHiveIT.java</exclude>
+								<exclude>**/*BigPetStoreCrunchIT.java</exclude>
+							</excludes>
+						</configuration>
 						<executions>
 							<!-- States that both integration-test and verify goals of the Failsafe 
 								Maven plugin are executed. -->
@@ -365,46 +382,46 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
+						<configuration>
 
-                                <excludes>
-                                    <exclude>**/*TestPig.java</exclude>
-                                    <exclude>**/*TestHiveEmbedded.java</exclude>
-                                    <exclude>**/*TestCrunch.java</exclude>
-                                    <exclude>**/*TestPetStoreTransactionGeneratorJob.java</exclude>
-                                </excludes>
+							<excludes>
+								<exclude>**/*TestPig.java</exclude>
+								<exclude>**/*TestHiveEmbedded.java</exclude>
+								<exclude>**/*TestCrunch.java</exclude>
+								<exclude>**/*TestPetStoreTransactionGeneratorJob.java</exclude>
+							</excludes>
 
-                        </configuration>
+						</configuration>
 					</plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>build-helper-maven-plugin</artifactId>
-                        <version>1.5</version>
-                        <executions>
-                            <execution>
-                                <id>add-test-source</id>
-                                <phase>generate-test-sources</phase>
-                                <goals>
-                                    <goal>add-test-source</goal>
-                                </goals>
-                                <configuration>
-                                    <sources>
-                                        <source>src/integration/java</source>
-                                    </sources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>build-helper-maven-plugin</artifactId>
+						<version>1.5</version>
+						<executions>
+							<execution>
+								<id>add-test-source</id>
+								<phase>generate-test-sources</phase>
+								<goals>
+									<goal>add-test-source</goal>
+								</goals>
+								<configuration>
+									<sources>
+										<source>src/integration/java</source>
+									</sources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-failsafe-plugin</artifactId>
 						<version>2.12</version>
-                        <configuration>
-                            <excludes>
-                                <exclude>**/*BigPetStorePigIT.java</exclude>
-                                <exclude>**/*BigPetStoreCrunchIT.java</exclude>
-                            </excludes>
-                        </configuration>
+						<configuration>
+							<excludes>
+								<exclude>**/*BigPetStorePigIT.java</exclude>
+								<exclude>**/*BigPetStoreCrunchIT.java</exclude>
+							</excludes>
+						</configuration>
 						<executions>
 							<!-- States that both integration-test and verify goals of the Failsafe 
 								Maven plugin are executed. -->
@@ -560,75 +577,75 @@
 			<properties>
 				<skip.unit.tests>true</skip.unit.tests>
 			</properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <excludes>
-                                    <exclude>**/*TestPig.java</exclude>
-                                    <exclude>**/*TestHiveEmbedded.java</exclude>
-                                    <exclude>**/*TestCrunch.java</exclude>
-                                    <exclude>**/*TestPetStoreTransactionGeneratorJob.java</exclude>
-                                </excludes>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>build-helper-maven-plugin</artifactId>
-                        <version>1.5</version>
-                        <executions>
-                            <execution>
-                                <id>add-test-source</id>
-                                <phase>generate-test-sources</phase>
-                                <goals>
-                                    <goal>add-test-source</goal>
-                                </goals>
-                                <configuration>
-                                    <sources>
-                                        <source>src/integration/java</source>
-                                    </sources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-failsafe-plugin</artifactId>
-                        <version>2.12</version>
-                        <configuration>
-                            <excludes>
-                                <exclude>**/*BigPetStorePigIT.java</exclude>
-                                <exclude>**/*BigPetStoreHiveIT.java</exclude>
-                            </excludes>
-                        </configuration>
-                        <executions>
-                            <!-- States that both integration-test and verify goals of the Failsafe
-                                Maven plugin are executed. -->
-                            <execution>
-                                <id>integration-tests</id>
-                                <goals>
-                                    <goal>integration-test</goal>
-                                    <goal>verify</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<excludes>
+								<exclude>**/*TestPig.java</exclude>
+								<exclude>**/*TestHiveEmbedded.java</exclude>
+								<exclude>**/*TestCrunch.java</exclude>
+								<exclude>**/*TestPetStoreTransactionGeneratorJob.java</exclude>
+							</excludes>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>build-helper-maven-plugin</artifactId>
+						<version>1.5</version>
+						<executions>
+							<execution>
+								<id>add-test-source</id>
+								<phase>generate-test-sources</phase>
+								<goals>
+									<goal>add-test-source</goal>
+								</goals>
+								<configuration>
+									<sources>
+										<source>src/integration/java</source>
+									</sources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-failsafe-plugin</artifactId>
+						<version>2.12</version>
+						<configuration>
+							<excludes>
+								<exclude>**/*BigPetStorePigIT.java</exclude>
+								<exclude>**/*BigPetStoreHiveIT.java</exclude>
+							</excludes>
+						</configuration>
+						<executions>
+							<!-- States that both integration-test and verify goals of the Failsafe 
+								Maven plugin are executed. -->
+							<execution>
+								<id>integration-tests</id>
+								<goals>
+									<goal>integration-test</goal>
+									<goal>verify</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
 
-            <dependencies>
+			<dependencies>
 				<dependency>
 					<groupId>org.apache.crunch</groupId>
 					<artifactId>crunch-core</artifactId>
 					<version>0.9.0-hadoop2</version>
 				</dependency>
-		       <dependency>
-		            <groupId>com.google.protobuf</groupId>
-		            <artifactId>protobuf-java</artifactId>
-		            <version>2.5.0</version>
-		        </dependency>
+				<dependency>
+					<groupId>com.google.protobuf</groupId>
+					<artifactId>protobuf-java</artifactId>
+					<version>2.5.0</version>
+				</dependency>
 			</dependencies>
 		</profile>
 
