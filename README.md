@@ -1,5 +1,8 @@
 BigPetStore
 ============
+
+test mvn deploy1
+
 Apache Bigtop/Hadoop Ecosystem Demo
 -----------------------------------
 This software is created to demonstrate Apache Bigtop for processing
