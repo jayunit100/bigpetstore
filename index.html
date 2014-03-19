@@ -1,31 +1,42 @@
 <html>
    <head>
+      <script type="text/javascript" src="./deps/jquery/jquery.js"></script>
       <script type='text/javascript' src='https://www.google.com/jsapi'></script>
       <script type='text/javascript'>
-         google.load('visualization', '1', {'packages': ['geomap']});
-         google.setOnLoadCallback(drawMap);
-         
-          function drawMap() {
-            var data = google.visualization.arrayToDataTable([
-              ['Country', 'Popularity'],
-              ['Germany', 200],
-              ['United States', 300],
-              ['Brazil', 400],
-              ['Canada', 500],
-              ['France', 600],
-              ['RU', 700]
-            ]);
-         
-            var options = {};
-            options['dataMode'] = 'regions';
-         
-            var container = document.getElementById('map_canvas');
-            var geomap = new google.visualization.GeoMap(container);
-            geomap.draw(data, options);
-         };
+         var example_data = [
+                  ['Country', 'Popularity'],
+                  ['Germany', 200],
+                  ['United States', 300],
+                  ['Brazil', 400],
+                  ['Canada', 500],
+                  ['France', 600],
+                  ['RU', 700]
+                ];
+      
+             google.load('visualization', '1', {'packages': ['geomap']});
+//             google.setOnLoadCallback(drawMap);
+             
+             function drawMap() {
+                var my_data = JSON.parse($("#input").val());
+                var data = google.visualization.arrayToDataTable(my_data);
+
+                var options = {'dataMode': 'regions'};
+
+                var container = document.getElementById('map_canvas');
+                var geomap = new google.visualization.GeoMap(container);
+                geomap.draw(data, options);
+             };
+             
+         $(document).ready(function() {
+             $("#redraw").click(drawMap);
+             $("#input").val(JSON.stringify(example_data));
+             $("#redraw").click();
+         });
       </script>
    </head>
    <body>
       <div id='map_canvas'></div>
+      <textarea id="input" cols="60" rows="15"></textarea>
+      <button id="redraw">Redraw map</button>
    </body>
 </html>
