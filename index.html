@@ -15,9 +15,19 @@
       
              google.load('visualization', '1', {'packages': ['geomap']});
 //             google.setOnLoadCallback(drawMap);
+
+             function parse(text) {
+                 var lines = text.split('\n');
+                 return lines.map(function(l) {return l.split('\t');});
+             }
+             
+             function unparse(data) {
+                 var lines = data.map(function(d) {return d.join('\t');});
+                 return lines.join('\n');
+             }
              
              function drawMap() {
-                var my_data = JSON.parse($("#input").val());
+                var my_data = parse($("#input").val());
                 var data = google.visualization.arrayToDataTable(my_data);
 
                 var options = {'dataMode': 'regions'};
@@ -29,7 +39,7 @@
              
          $(document).ready(function() {
              $("#redraw").click(drawMap);
-             $("#input").val(JSON.stringify(example_data));
+             $("#input").val(unparse(example_data));
              $("#redraw").click();
          });
       </script>
