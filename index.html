@@ -5,7 +5,7 @@
       <script type='text/javascript'>
          var example_data = [
                   ['State', 'Product','Popularity'],
-                  ['US-NH', 'df', 200],
+                  ['US-NH', 'cat-food', 200],
                   ['US-CA', 'dog-food', 300],
                   ['US-CT', 'dog-food', 400],
                   ['US-OK', 'dog-food', 500],
@@ -26,7 +26,15 @@
              //convert it to json
              function parse(text) {
                  var lines = text.split('\n');
-                 return lines.map(
+		 var filtered = 
+		    lines.filter(
+				    function (el) {
+		            //only visualize "dog-food" if thats what is entered...		     
+			    var t = (el.match(document.getElementById("product").value) != null);
+			     return t;
+			    }
+		 );
+	         return filtered.map(
                     function(l) {
                        var array = l.split('\t');
                        return [array[0], array[2]];
@@ -69,5 +77,9 @@
       <div id='map_canvas'></div>
       <textarea id="input" cols="60" rows="15"></textarea>
       <button id="redraw">Redraw map</button>
+      <h2>Filter product name (i.e. dog-food, cat-food, ...) </h2>
+      <input id="product" type='text' name='txt' value="dog-food">
+
    </body>
 </html>
+
