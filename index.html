@@ -30,8 +30,12 @@
                 var my_data = parse($("#input").val());
                 var data = google.visualization.arrayToDataTable(my_data);
 
-                var options = {'dataMode': 'regions'};
-
+                var options = {
+                               'dataMode': 'regions',
+                               'region':'usa'
+                               
+                               };
+                
                 var container = document.getElementById('map_canvas');
                 var geomap = new google.visualization.GeoMap(container);
                 geomap.draw(data, options);
