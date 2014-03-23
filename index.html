@@ -37,7 +37,12 @@
 	         return filtered.map(
                     function(l) {
                        var array = l.split('\t');
-                       return [array[0], array[2]];
+		       //alert(array[0].length);
+		       if(array[0].length==2){
+		       //append US to state codes.
+                         array[0]="US-"+array[0];
+		       }
+		       return [array[0], array[2]];
                        }
                     );
              }
