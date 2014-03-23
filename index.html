@@ -4,7 +4,7 @@
       <script type='text/javascript' src='https://www.google.com/jsapi'></script>
       <script type='text/javascript'>
          var example_data = [
-                  ['State', 'Product','Popularity'],
+                  ['State', 'Product',0],
                   ['US-NH', 'dog-food', 200],
                   ['US-CA', 'dog-food', 300],
                   ['US-CT', 'dog-food', 400],
@@ -28,7 +28,9 @@
                  var lines = text.split('\n');
                  return lines.map(
                     function(l) {
-                       return l.split('\t');}
+                       var array = l.split('\t');
+                       return [array[0], array[1], parseInt(array[2])];
+                       }
                     );
              }
              
