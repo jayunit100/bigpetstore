@@ -28,6 +28,7 @@
              
              function drawMap() {
                 var my_data = parse($("#input").val());
+                alert(my_data);
                 var data = google.visualization.arrayToDataTable(my_data);
 
                 var options = {dataMode: 'regions',
