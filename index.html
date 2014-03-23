@@ -5,12 +5,12 @@
       <script type='text/javascript'>
          var example_data = [
                   ['State', 'Product','Popularity'],
-                  ['NH', 'dog-food', 200],
-                  ['CA', 'dog-food', 300],
-                  ['CT', 'dog-food', 400],
-                  ['OK', 'dog-food', 500],
-                  ['AZ', 'dog-food', 600],
-                  ['CO', 'dog-food', 700]
+                  ['US-NH', 'dog-food', 200],
+                  ['US-CA', 'dog-food', 300],
+                  ['US-CT', 'dog-food', 400],
+                  ['US-OK', 'dog-food', 500],
+                  ['US-AZ', 'dog-food', 600],
+                  ['US-CO', 'dog-food', 700]
                 ];
       
              google.load('visualization', '1', {'packages': ['geomap']});
@@ -30,11 +30,9 @@
                 var my_data = parse($("#input").val());
                 var data = google.visualization.arrayToDataTable(my_data);
 
-                var options = {
-                               'dataMode': 'regions',
-                               'region':'us_metro'
-                               
-                               };
+                var options = {dataMode: 'regions',
+                     region:'US',
+                     resolution : 'metros'};
                 
                 var container = document.getElementById('map_canvas');
                 var geomap = new google.visualization.GeoMap(container);
