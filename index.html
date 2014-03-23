@@ -13,22 +13,37 @@
                   ['US-CO', 'dog-food', 700]
                 ];
       
-             google.load('visualization', '1', {'packages': ['geomap']});
-//             google.setOnLoadCallback(drawMap);
+             google.load(
+                'visualization', 
+                '1', 
+                {
+                   'packages': ['geomap']
+                }
+             );
+             //google.setOnLoadCallback(drawMap);
 
+             //take a block of input text, 
+             //convert it to json
              function parse(text) {
                  var lines = text.split('\n');
-                 return lines.map(function(l) {return l.split('\t');});
+                 return lines.map(
+                    function(l) {
+                       return l.split('\t');}
+                    );
              }
              
+             //Take a json object, 
+             //convert it to plain text
              function unparse(data) {
-                 var lines = data.map(function(d) {return d.join('\t');});
+                 var lines = data.map(function(d) {
+                    return d.join('\t');
+                 });
                  return lines.join('\n');
              }
              
              function drawMap() {
                 var my_data = parse($("#input").val());
-                alert(my_data);
+                alert(unparse(my_data));
                 var data = google.visualization.arrayToDataTable(my_data);
 
                 var options = {dataMode: 'regions',
