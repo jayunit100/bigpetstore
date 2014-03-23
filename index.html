@@ -29,7 +29,7 @@
                  return lines.map(
                     function(l) {
                        var array = l.split('\t');
-                       return [array[0], array[1], parseInt(array[2])];
+                       return [array[0], parseInt(array[2])];
                        }
                     );
              }
@@ -45,10 +45,11 @@
              
              function drawMap() {
                 var my_data = parse($("#input").val());
-                alert(unparse(my_data));
+                alert("unparsed = " + unparse(my_data));
                 var data = google.visualization.arrayToDataTable(my_data);
 
-                var options = {dataMode: 'regions',
+                var options = {
+                     dataMode: 'regions',
                      region:'US',
                      resolution : 'metros'};
                 
