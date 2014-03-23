@@ -4,8 +4,8 @@
       <script type='text/javascript' src='https://www.google.com/jsapi'></script>
       <script type='text/javascript'>
          var example_data = [
-                  ['State', 'Product',0],
-                  ['US-NH', 'dog-food', 200],
+                  ['State', 'Product','Popularity'],
+                  ['US-NH', 'df', 200],
                   ['US-CA', 'dog-food', 300],
                   ['US-CT', 'dog-food', 400],
                   ['US-OK', 'dog-food', 500],
@@ -29,7 +29,7 @@
                  return lines.map(
                     function(l) {
                        var array = l.split('\t');
-                       return [array[0], parseInt(array[2])];
+                       return [array[0], array[2]];
                        }
                     );
              }
@@ -45,7 +45,7 @@
              
              function drawMap() {
                 var my_data = parse($("#input").val());
-                alert("unparsed = " + unparse(my_data));
+                //alert("hrt");
                 var data = google.visualization.arrayToDataTable(my_data);
 
                 var options = {
