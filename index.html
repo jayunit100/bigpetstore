@@ -22,53 +22,55 @@
              );
              //google.setOnLoadCallback(drawMap);
 
-             //take a block of input text, 
-             //convert it to json
              function parse(text) {
+                 // string -> array of arrays
                  var lines = text.split('\n');
-		 var filtered = 
-		    lines.filter(
-				    function (el) {
-		            //only visualize "dog-food" if thats what is entered...		     
-			    var t = (el.match(document.getElementById("product").value) != null);
-			    return t;
-			    }
-		 );
-	         return filtered.map(
-                    function(l) {
-                       var array = l.split('\t');
-		       //alert(array[0].length);
-		       if(array[0].length==2){
-		       //append US to state codes.
-                         array[0]="US-"+array[0];
-		       }
-		       return [array[0], array[2]];
-                       }
-                    );
+                 return lines.map(function(l) {return l.split('\t');});
              }
              
-             //Take a json object, 
-             //convert it to plain text
+             function my_filter(data_lines) {
+                 // keep everything whose 2nd element matches #product
+                 var filter_value = $("#product").val();
+                 return filtered = data_lines.filter(function (dl) {
+                     return dl[1] === filter_value;
+                 });
+             }
+             
+             function my_map(data_lines) {
+                 // keep the 1st and 3rd element of each array
+                 return data_lines.map(function (ar) {
+                     return [ar[0], ar[2]];
+                 });
+             }
+             
              function unparse(data) {
+                 // array of arrays -> string
                  var lines = data.map(function(d) {
                     return d.join('\t');
                  });
                  return lines.join('\n');
              }
              
+             function log(x) {
+                 console.log(JSON.stringify(x));
+             }
+             
              function drawMap() {
-                var my_data = parse($("#input").val());
-                //alert("hrt");
-                var data = google.visualization.arrayToDataTable(my_data);
+                 var text  = $("#input").val(),
+                     data1 = parse(text),
+                     data2 = my_filter(data1),
+                     data3 = my_map(data2);
+                     
+                 var data4 = google.visualization.arrayToDataTable(data3);
 
-                var options = {
-                     dataMode: 'regions',
-                     region:'US',
-                     resolution : 'metros'};
+                 var options = {
+                      dataMode: 'regions',
+                      region:'US',
+                      resolution : 'metros'};
                 
-                var container = document.getElementById('map_canvas');
-                var geomap = new google.visualization.GeoMap(container);
-                geomap.draw(data, options);
+                 var container = document.getElementById('map_canvas');
+                 var geomap = new google.visualization.GeoMap(container);
+                 geomap.draw(data4, options);
              };
              
          $(document).ready(function() {
