@@ -1,31 +1,92 @@
 <html>
    <head>
+      <script type="text/javascript" src="./deps/jquery/jquery.js"></script>
       <script type='text/javascript' src='https://www.google.com/jsapi'></script>
       <script type='text/javascript'>
-         google.load('visualization', '1', {'packages': ['geomap']});
-         google.setOnLoadCallback(drawMap);
-         
-          function drawMap() {
-            var data = google.visualization.arrayToDataTable([
-              ['Country', 'Popularity'],
-              ['Germany', 200],
-              ['United States', 300],
-              ['Brazil', 400],
-              ['Canada', 500],
-              ['France', 600],
-              ['RU', 700]
-            ]);
-         
-            var options = {};
-            options['dataMode'] = 'regions';
-         
-            var container = document.getElementById('map_canvas');
-            var geomap = new google.visualization.GeoMap(container);
-            geomap.draw(data, options);
-         };
+         var example_data = [
+                  ['US-QQ', 'dog-food', 999],
+                  ['US-NH', 'cat-food', 200],
+                  ['US-CA', 'dog-food', 300],
+                  ['US-CT', 'dog-food', 400],
+                  ['US-OK', 'dog-food', 500],
+                  ['US-AZ', 'dog-food', 600],
+                  ['US-CO', 'dog-food', 700]
+                ];
+      
+             google.load(
+                'visualization', 
+                '1', 
+                {
+                   'packages': ['geomap']
+                }
+             );
+             //google.setOnLoadCallback(drawMap);
+
+             function parse(text) {
+                 // string -> array of arrays
+                 var lines = text.split('\n');
+                 return lines.map(function(l) {return l.split('\t');});
+             }
+             
+             function my_filter(data_lines) {
+                 // keep everything whose 2nd element matches #product
+                 var filter_value = $("#product").val();
+                 return filtered = data_lines.filter(function (dl) {
+                     return dl[1] === filter_value;
+                 });
+             }
+             
+             function my_map(data_lines) {
+                 // keep the 1st and 3rd element of each array
+                 return data_lines.map(function (ar) {
+                     return [ar[0], ar[2]];
+                 });
+             }
+             
+             function unparse(data) {
+                 // array of arrays -> string
+                 var lines = data.map(function(d) {
+                    return d.join('\t');
+                 });
+                 return lines.join('\n');
+             }
+             
+             function log(x) {
+                 console.log(JSON.stringify(x));
+             }
+             
+             function drawMap() {
+                 var text  = $("#input").val(),
+                     data1 = parse(text),
+                     data2 = my_filter(data1),
+                     data3 = my_map(data2);
+                     
+                 var data4 = google.visualization.arrayToDataTable(data3);
+
+                 var options = {
+                      dataMode: 'regions',
+                      region:'US',
+                      resolution : 'metros'};
+                
+                 var container = document.getElementById('map_canvas');
+                 var geomap = new google.visualization.GeoMap(container);
+                 geomap.draw(data4, options);
+             };
+             
+         $(document).ready(function() {
+             $("#redraw").click(drawMap);
+             $("#input").val(unparse(example_data));
+             $("#redraw").click();
+         });
       </script>
    </head>
    <body>
       <div id='map_canvas'></div>
+      <textarea id="input" cols="60" rows="15"></textarea>
+      <button id="redraw">Redraw map</button>
+      <h2>Filter product name (i.e. dog-food, cat-food, ...) </h2>
+      <input id="product" type='text' name='txt' value="dog-food">
+
    </body>
 </html>
+
