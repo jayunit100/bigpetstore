@@ -80,12 +80,14 @@ For example with both pig and hive these could easily include
   *Most popular items by state*
 
 
-* Phase 3: Clustering the states by all feilds
+* Phase 3: Clustering the states by all fields
 
   Now, say we want to cluster the states, so as to put different states into different buying categories
   for our marketing team to deal with differently.
 
 * Phase 4: Visualizing the Data in D3.
+
+ - try it [on the gh-pages branch](http://jayunit100.github.io/bigpetstore/)
 
 Running on a hadoop cluster
 ---------------------------
