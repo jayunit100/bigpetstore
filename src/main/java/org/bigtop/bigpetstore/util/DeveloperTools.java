@@ -13,16 +13,16 @@ import org.apache.hadoop.fs.permission.FsPermission;
  */
 public class DeveloperTools {
     
-    public static void validate(String[] minargs, String... expected) {
-
+    public static void validate(String[] args, String... expected) {
+        int i=-1;
         try{ 
-            for(int i = 0 ; i < minargs.length ; i++) {
-                System.out.println("VALUE OF " + expected[i] + " = " + minargs[i]);
+            for(i = 0 ; i < expected.length ; i++) {
+                System.out.println("VALUE OF " + expected[i] + " = " + args[i]);
             }
         }
         catch(Throwable t) {
-            System.out.println("Error parsing arguments.");
-            System.out.println("We expect " + expected.length + " arguments for this phase.");
+            System.out.println("rgument " + i + " not available.");
+            System.out.println("We expected " + expected.length + " arguments for this phase");
         }
         
         
