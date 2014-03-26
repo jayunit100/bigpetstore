@@ -2,7 +2,7 @@ digraph ethane {
 
    node [shape=record];
 
-   PIG_ANALYTICS [label="PIG_ANALYTICS|Unstructured-unsupported-pigscripts|(unknown output paths)"];
+   PIG_ANALYTICS [label="PIG_ANALYTICS|Unstructured-unsupported-pigscripts| pig_ad_hoc(0-n)"];
 
    CUSTOMER_PAGE [label="CUSTOMER_PAGE|json|CUSTOMER_PAGE/part*"];
    DIRTY_CSV [label="DIRTY_CSV|fname   lname -prod , price ,prod,..|generated/part*"];

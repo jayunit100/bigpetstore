@@ -12,7 +12,7 @@ public class BigPetStoreConstants {
    public enum OUTPUTS{
         generated,//generator
         cleaned,//pig
-        BPS_TEST_PIG_COUNT_PRODUCTS,
+        pig_ad_hoc_script,
         MAHOUT_CF_IN,//hive view over data for mahout
         MAHOUT_CF,//mahout cf results 
         CUSTOMER_PAGE//crunchhh

@@ -42,7 +42,7 @@ public class BigPetStorePigIT extends ITUtils{
      */
     public static final Path BPS_TEST_PIG_COUNT_PRODUCTS = fs.makeQualified(
             new Path("bps_integration_",
-                    BigPetStoreConstants.OUTPUTS.BPS_TEST_PIG_COUNT_PRODUCTS.name()));
+                    BigPetStoreConstants.OUTPUTS.pig_ad_hoc_script.name()+"0"));
     
     static final File PIG_SCRIPT = new File("BPS_analytics.pig");
     
@@ -138,7 +138,6 @@ public class BigPetStorePigIT extends ITUtils{
     Map pigResult;
 
     private void runPig(Path input, Path output, File pigscript) throws Exception {
-        
         
                 new PigCSVCleaner(
                         input,

@@ -2,7 +2,9 @@ package org.bigtop.bigpetstore.etl;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -11,6 +13,7 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.pig.ExecType;
 import org.apache.pig.PigServer;
+import org.bigtop.bigpetstore.util.BigPetStoreConstants;
 import org.bigtop.bigpetstore.util.DeveloperTools;
 
 /**
@@ -72,9 +75,27 @@ public class PigCSVCleaner  {
         /**
          * Now we run scripts... this is where you can add some 
          * arbitrary analytics.
+         * 
+         * We add "input" and "output" parameters so that each 
+         * script can read them and use them if they want.  
+         * 
+         * Otherwise, just hardcode your inputs into your pig scripts.
          */
+        int i = 0;
         for(File script : scripts) {
-            pigServer.registerScript(script.getAbsolutePath());
+            Map<String,String> parameters = new HashMap<String,String>();
+            parameters.put("input", 
+                    outputPath.toString());
+            
+            Path dir = outputPath.getParent();
+            Path adHocOut=
+                    new Path(
+                            dir,
+                            BigPetStoreConstants.OUTPUTS.pig_ad_hoc_script.name()+(i++));
+            System.out.println("Setting default output to " + adHocOut);
+            parameters.put("output", adHocOut.toString());
+            
+            pigServer.registerScript(script.getAbsolutePath(), parameters);
         }
     }
 
