@@ -106,7 +106,12 @@ public class PigCSVCleaner  {
             if(! f.exists()) {
                 throw new RuntimeException("Pig script arg " + i+ " " + f.getAbsolutePath() + " not found. ");
             }
+            files.add(f);
         }
+        System.out.println(
+                "Ad-hoc analytics:"+
+                "Added  " + files.size() + " pig scripts to post process.  "+
+                "Each one will be given $input and $output arguments.");
         return files.toArray(new File[]{});
     }
     public static void main(final String[] args) throws Exception {
