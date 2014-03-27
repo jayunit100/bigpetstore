@@ -30,17 +30,23 @@ public class TransactionIteratorFactory {
         // That is just to make it easy to add new products.
         // Each state is associated with a relative probability.
         AZ(.1f, "dog-food_10", "cat-food_8", "leather-collar_25",
-                "snake-bite ointment_30", "turtle-food_11"), AK(.1f,
+                "snake-bite ointment_30", "turtle-food_11"), 
+        AK(.1f,
                 "dog-food_10", "cat-food_8", "fuzzy-collar_19",
-                "antelope-caller_20", "salmon-bait_30"), CT(.1f, "dog-food_10",
-                "cat-food_8", "fuzzy-collar_19", "turtle-pellets_5"), OK(.1f,
+                "antelope-caller_20", "salmon-bait_30"), 
+        CT(.1f, "dog-food_10",
+                "cat-food_8", "fuzzy-collar_19", "turtle-pellets_5"), 
+        OK(.1f,
                 "dog-food_10", "cat-food_8", "duck-caller_13",
-                "rodent-cage_40", "hay-bail_5", "cow-dung_2"), CO(.1f,
+                "rodent-cage_40", "hay-bail_5", "cow-dung_2"), 
+        CO(.1f,
                 "dog-food_10", "cat-food_8", "choke-collar_15",
-                "antelope snacks_30", "duck-caller_18"), CA(.3f, "dog-food_10",
+                "antelope snacks_30", "duck-caller_18"), 
+        CA(.3f, "dog-food_10",
                 "cat-food_8", "fish-food_12", "organic-dog-food_16",
-                "turtle-pellets_5"), NY(.2f, "dog-food_10", "cat-food_8",
-                "steel-leash_20", "fish-food_20", "seal-spray_25");
+                "turtle-pellets_5"), 
+        NY(.2f, "dog-food_10", "cat-food_8", "steel-leash_20", 
+                "fish-food_20", "seal-spray_25");
 
         public static Random rand = new Random();
         public float probability;

@@ -15,6 +15,7 @@ import org.apache.pig.ExecType;
 import org.apache.pig.PigServer;
 import org.bigtop.bigpetstore.util.BigPetStoreConstants;
 import org.bigtop.bigpetstore.util.DeveloperTools;
+import org.bigtop.bigpetstore.util.NumericalIdUtils;
 
 /**
  * This class operates by ETL'ing the dataset into pig.
@@ -28,6 +29,8 @@ public class PigCSVCleaner  {
     public PigCSVCleaner(Path inputPath, Path outputPath, ExecType ex, File... scripts)
             throws Exception {
 
+        
+        
         FileSystem fs = FileSystem.get(inputPath.toUri(), new Configuration());
         
         if(! fs.exists(inputPath)){
@@ -39,8 +42,6 @@ public class PigCSVCleaner  {
         }
         // run pig in local mode
         pigServer = new PigServer(ex);
-        // final String datapath =
-        // test_data_directory+"/generated/part-r-00000";
 
         /**
          * First, split the tabs up.
@@ -64,12 +65,15 @@ public class PigCSVCleaner  {
          * the FIRST and SECOND fields. (d,e) (a,b,c) -> d e a b c
          */
         pigServer
-                .registerQuery("id_details = FOREACH csvdata GENERATE "
-                        + "FLATTEN" + "(STRSPLIT"
-                        + "(ID,',',3)) AS (drop, code, transaction) ,"
-                        + "FLATTEN" + "(STRSPLIT" +
-                        "(DETAILS,',',5)) AS (lname, fname, date, price, product:chararray);");
-        
+                .registerQuery(
+                        "id_details = FOREACH csvdata GENERATE "
+                        + "FLATTEN" + "(STRSPLIT(ID,',',3)) AS " +
+                        		"(drop, code, transaction) ,"
+
+                        + "FLATTEN" + "(STRSPLIT(DETAILS,',',5)) AS " +
+                            "(lname, fname, date, price," +
+                            "product:chararray);");
+
         pigServer.store("id_details", outputPath.toString());
         
         /**
