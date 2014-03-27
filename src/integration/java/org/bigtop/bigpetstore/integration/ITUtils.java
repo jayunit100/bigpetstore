@@ -28,9 +28,10 @@ public class ITUtils {
         try{
             fs=FileSystem.getLocal(new Configuration());
         }
-        catch(Exception e)
+        catch(Throwable e)
         {
-            
+            throw new RuntimeException("Major error:  Probably issue.   " +
+            		"Check hadoop version?  "+ System.getProperties());
         }
     }
     public static final Path BPS_TEST_GENERATED = fs.makeQualified(
@@ -52,6 +53,12 @@ public class ITUtils {
      * these arent designed to be run against a distribtued system.
      */
     public static void checkConf(Configuration conf) throws Exception { 
+        if(conf.get("mapreduce.jobtracker.address")==null) {
+            log.warn("Missing mapreduce.jobtracker.address???????!!!! " +
+            		"This can be the case in hive tests which use special " +
+            		"configurations, but we should fix it sometime.");
+            return;
+        }
         if(! conf.get("mapreduce.jobtracker.address").equals("local")) {
             throw new RuntimeException("ERROR: bad conf : " + "mapreduce.jobtracker.address");
         }

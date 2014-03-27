@@ -3,25 +3,18 @@ package org.bigtop.bigpetstore.etl;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hive.ql.parse.HiveParser_IdentifiersParser.booleanValue_return;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.util.Tool;
-import org.bigtop.bigpetstore.contract.PetStoreStatistics;
 import org.bigtop.bigpetstore.util.BigPetStoreConstants;
+import org.bigtop.bigpetstore.util.NumericalIdUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.Maps;
-import com.google.protobuf.UnknownFieldSet.Field;
 
 /**
  * 
@@ -45,7 +38,22 @@ import com.google.protobuf.UnknownFieldSet.Field;
  * 
  */
 public class HiveViewCreator implements Tool {
-    
+
+    static {
+        try{
+            Class.forName("org.apache.hadoop.hive.ql.exec.mr.ExecDriver");
+            System.out.println("found exec driver !!!!!!!!!!!!!!!!");
+        }
+        catch(Throwable t) {
+            throw new RuntimeException(t);
+        }
+        try{
+            //Class.forName("org.apache.hadoop.hive.ql.exec.mr.ExecDriver");
+        }
+        catch(Throwable t) {
+            throw new RuntimeException(t);
+        }
+    }
     Configuration conf;
     @Override
     public void setConf(Configuration conf) {
@@ -88,22 +96,21 @@ public class HiveViewCreator implements Tool {
                 + "STORED AS TEXTFILE "
                 + "LOCATION '"+inTablePath+"'";
         
-        ResultSet res = stmt.executeQuery(create);
-
+        boolean res = stmt.execute(create);
+        System.out.println("Execute return code : " +res);
         //will change once we add hashes into pig ETL clean
         String create2 = 
-                "create table "+outTableName+" as select state from "+inTableName;
+                "create table "+outTableName+" as "+
+                "select state,fname,lname,hash(product) from "+inTableName;
         System.out.println("out table= " + create2  );
-        res = stmt.executeQuery(create2);
-    
-        System.out.println("result = "+res.first());
+        boolean res2 = stmt.execute(create2);
 
+        System.out.println("Execute return code : " +res2);
         return 0;
     }
 
-    public static final String HIVE_JDBC_DRIVER = "org.apache.hadoop.hive.jdbc.HiveDriver";
-    public static final String HIVE_JDBC_EMBEDDED_CONNECTION = "jdbc:hive://";
-    private static String driverName = "org.apache.hadoop.hive.jdbc.HiveDriver";
+    public static final String HIVE_JDBC_DRIVER = "org.apache.hive.jdbc.HiveDriver";
+    public static final String HIVE_JDBC_EMBEDDED_CONNECTION = "jdbc:hive2://";
 
     final static Logger log = LoggerFactory.getLogger(HiveViewCreator.class);
 
@@ -113,7 +120,7 @@ public class HiveViewCreator implements Tool {
         Class.forName(HIVE_JDBC_DRIVER);
         Connection con = DriverManager.getConnection(
                 HIVE_JDBC_EMBEDDED_CONNECTION, "", "");
-
+        System.out.println("hive con = " + con.getClass().getName());
         Statement stmt = con.createStatement();
         return stmt;
     }
