@@ -23,7 +23,7 @@ Build Instructions
 
 * BUILD THE JAR
 
-mvn clean package will build the bigpetstore jar
+  "mvn clean package" will build the bigpetstore jar
 
 * Run Intergration tests with
 
@@ -94,9 +94,9 @@ Running on a hadoop cluster
 
 wget s3://bigpetstore/bigpetstore.jar
 
-hadoop bigpetstore.jar org.bigtop.bigpetstore.generator.BPSGenerator 1000000 bigpetstore/gen
+hadoop jar bigpetstore.jar org.bigtop.bigpetstore.generator.BPSGenerator 1000000 bigpetstore/gen
 
-hadoop bigpetstore.jar org.bigtop.bigpetstore.etl.PigCSVCleaner gen/ pig/ custom_pigscript.pig
+hadoop jar bigpetstore.jar org.bigtop.bigpetstore.etl.PigCSVCleaner bigpetstore/gen/ bigpetstore/pig/ custom_pigscript.pig
 ... (will add more steps as we add more phases to the workflow) ...
 
 
