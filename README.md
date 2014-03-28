@@ -111,16 +111,6 @@ Now run this to generate 1,000,000 pet store transactions:
 
 ./elastic-mapreduce --create --jar s3://bigpetstore/bigpetstore.jar \
 --main-class org.bigtop.bigpetstore.generator.BPSGenerator \
---num-instances 10 --arg 1000000 \
---arg s3://bigpetstore/output \
---hadoop-version "2.2.0"  \
---master-instance-type m1.medium \
---slave-instance-type m1.medium
-
-- Go on processing the data: 
-
-./elastic-mapreduce --create --jar s3://bigpetstore/bigpetstore.jar \
---main-class org.bigtop.bigpetstore.generator.BPSGenerator \
 --num-instances 10  \
 --arg 1000000 \
 --arg s3://bigpetstore/data/generated \
@@ -128,12 +118,17 @@ Now run this to generate 1,000,000 pet store transactions:
 --master-instance-type m1.medium \
 --slave-instance-type m1.medium
 
-... 
+...Now lets clean the data with pig...
 
 Replace the above "main-class", and "--arg" options with
 --main-class org.bigtop.bigpetstore.etl.PigCSVCleaner 
 --arg s3://bigpetstore/data/generated
 --arg s3://bigpetstore/data/pig_out
+(optional, you can send a script referencing the cleaned $input path to do some 
+custom analytics, see the BPS_Analytics.pig script and companion 
+http://jayunit100.github.io/bigpetstore) as an example).
+--arg s3://path_to_custom_analytics_script.pig 
+
 (note about pig: We support custom pig scripts.... for EMR, custom pig scripts will need to point to a 
 local path, so youll have to put that script on the machine as part
 of EMR setup w/ a custom script).
