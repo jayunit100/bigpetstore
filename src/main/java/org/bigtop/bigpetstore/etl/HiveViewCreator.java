@@ -81,8 +81,11 @@ public class HiveViewCreator implements Tool {
         Path inTablePath =  new Path(args[0]);
         String inTableName = "cleaned"+System.currentTimeMillis();
         String outTableName = BigPetStoreConstants.OUTPUTS.MAHOUT_CF_IN.name();
-
+        
+        Path outTablePath = new Path (inTablePath.getParent(),outTableName);
+        
         final String create = "CREATE EXTERNAL TABLE "+inTableName+" ("
+                + "  dump STRING,"
                 + "  state STRING,"
                 + "  trans_id STRING,"
                 + "  lname STRING,"
@@ -101,8 +104,10 @@ public class HiveViewCreator implements Tool {
         //will change once we add hashes into pig ETL clean
         String create2 = 
                 "create table "+outTableName+" as "+
-                "select state,fname,lname,hash(product) from "+inTableName;
-        System.out.println("out table= " + create2  );
+                "select hash(concat(state,fname,lname)),' ',hash(product),' ',1 from "+inTableName; 
+                
+        System.out.println("CREATE = " + create2  );
+        System.out.println("OUT PATH = " + outTablePath);
         boolean res2 = stmt.execute(create2);
 
         System.out.println("Execute return code : " +res2);
