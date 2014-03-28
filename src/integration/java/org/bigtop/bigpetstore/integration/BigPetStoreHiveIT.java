@@ -59,7 +59,11 @@ public class BigPetStoreHiveIT extends ITUtils{
         
         assertOutput(BPS_TEST_MAHOUT_IN, new Function<String, Boolean>() {
             public Boolean apply(String x) {
-                System.out.println("Verify " + x);
+                System.out.println("Verifying "+x);
+                String[] cols = x.split("\t");
+                Long.parseLong(cols[0]);
+                Long.parseLong(cols[1]);
+                Long.parseLong(cols[2]);
                 return true;
             }
         });
@@ -75,7 +79,7 @@ public class BigPetStoreHiveIT extends ITUtils{
             System.out.println(stat.getPath() + "  " + stat.getLen());
         }
 
-        Path p = new Path(base, "part-r-00000");
+        Path p = new Path(base, "000000_0");
         BufferedReader r = new BufferedReader(new InputStreamReader(fs.open(p)));
 
         // line:{"product":"big chew toy","count":3}

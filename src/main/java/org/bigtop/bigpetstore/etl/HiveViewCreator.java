@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hive.ql.parse.HiveParser_IdentifiersParser.booleanValue_return;
 import org.apache.hadoop.io.Text;
@@ -98,19 +99,23 @@ public class HiveViewCreator implements Tool {
                 + "LINES TERMINATED BY '\n' "
                 + "STORED AS TEXTFILE "
                 + "LOCATION '"+inTablePath+"'";
-        
         boolean res = stmt.execute(create);
         System.out.println("Execute return code : " +res);
         //will change once we add hashes into pig ETL clean
         String create2 = 
                 "create table "+outTableName+" as "+
-                "select hash(concat(state,fname,lname)),' ',hash(product),' ',1 from "+inTableName; 
+                "select hash(concat(state,fname,lname)),' ',hash(product),' ',1 " 
+                + "from "+inTableName;
                 
         System.out.println("CREATE = " + create2  );
         System.out.println("OUT PATH = " + outTablePath);
         boolean res2 = stmt.execute(create2);
 
-        System.out.println("Execute return code : " +res2);
+        String finalOutput = String.format(
+                "INSERT OVERWRITE DIRECTORY '%s' SELECT * FROM %s",outTablePath, outTableName) ;
+        
+        stmt.execute(finalOutput);
+        System.out.println("FINAL OUTPUT STORED : " + outTablePath);
         return 0;
     }
 
