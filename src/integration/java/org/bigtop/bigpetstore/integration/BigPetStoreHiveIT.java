@@ -31,10 +31,9 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * new HiveViewCreator(input,BigPetStoreConstants.OUTPUTS.MAHOUT_CF_IN.name());
- * 
- * 
+/** 
+ * Run this after running the @link{BigPetStorePigIT} test.
+ * Duh...
  */
 public class BigPetStoreHiveIT extends ITUtils{
     final static Logger log = LoggerFactory.getLogger(BigPetStoreHiveIT.class);
