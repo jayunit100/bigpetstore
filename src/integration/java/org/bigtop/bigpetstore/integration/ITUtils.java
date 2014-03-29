@@ -43,6 +43,9 @@ public class ITUtils {
     public static final Path BPS_TEST_MAHOUT_IN = fs.makeQualified(
             new Path("bps_integration_",BigPetStoreConstants.OUTPUTS.MAHOUT_CF_IN.name()));
 
+    public static final Path BPS_TEST_MAHOUT_OUT = fs.makeQualified(
+            new Path("bps_integration_",BigPetStoreConstants.OUTPUTS.MAHOUT_CF_OUT.name()));
+
     public static void main(String[] args){
         
     }

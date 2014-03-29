@@ -14,7 +14,7 @@ public class BigPetStoreConstants {
         cleaned,//pig
         pig_ad_hoc_script,
         MAHOUT_CF_IN,//hive view over data for mahout
-        MAHOUT_CF,//mahout cf results 
+        MAHOUT_CF_OUT,//mahout cf results 
         CUSTOMER_PAGE//crunchhh
     };
     

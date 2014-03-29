@@ -13,6 +13,12 @@ import org.apache.hadoop.fs.permission.FsPermission;
  */
 public class DeveloperTools {
     
+    /**
+     * Validates that the expected args are present in the "args" array.
+     * Just some syntactic sugar for good arg error handling.
+     * @param args
+     * @param expected arguments.
+     */
     public static void validate(String[] args, String... expected) {
         int i=-1;
         try{ 
