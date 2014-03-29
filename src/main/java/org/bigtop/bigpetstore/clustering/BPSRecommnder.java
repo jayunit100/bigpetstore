@@ -34,7 +34,8 @@ public class BPSRecommnder implements Tool {
         Configuration conf = new Configuration();
 
         System.out.println("Runnning recommender against : " + args[0] +" -> " + args[1]);
-        
+
+        RecommenderJob recommenderJob = new RecommenderJob();
         int ret = recommenderJob.run(new String[] {
              "--input",args[0],
              "--output",args[1],
