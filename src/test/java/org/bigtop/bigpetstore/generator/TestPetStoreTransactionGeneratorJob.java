@@ -48,6 +48,8 @@ public class TestPetStoreTransactionGeneratorJob {
          */
         Path output = new Path("petstoredata/" + (new Date()).toString());
         Job createInput = BPSGenerator.createJob(output, c);
+        createInput.submit();
+        System.out.println(createInput);
         createInput.waitForCompletion(true);
 
         FileSystem fs = FileSystem.getLocal(new Configuration());
