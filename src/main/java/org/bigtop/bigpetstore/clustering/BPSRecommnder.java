@@ -2,7 +2,10 @@ package org.bigtop.bigpetstore.clustering;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.util.Tool;
+import org.apache.hadoop.util.ToolRunner;
 import org.apache.mahout.cf.taste.hadoop.item.RecommenderJob;
+import org.apache.mahout.cf.taste.hadoop.preparation.PreparePreferenceMatrixJob;
+import org.apache.pig.builtin.LOG;
 import org.bigtop.bigpetstore.util.DeveloperTools;
 
 /**
@@ -16,6 +19,7 @@ import org.bigtop.bigpetstore.util.DeveloperTools;
  */
 public class BPSRecommnder implements Tool {
 
+   
     Configuration c;
     @Override
     public void setConf(Configuration conf) {
@@ -36,13 +40,23 @@ public class BPSRecommnder implements Tool {
         System.out.println("Runnning recommender against : " + args[0] +" -> " + args[1]);
 
         RecommenderJob recommenderJob = new RecommenderJob();
+        /**
+        int x = ToolRunner.run(getConf(), new BPSPreparePreferenceMatrixJob(), new String[]{
+            "--input", args[0],
+            "--output", args[1],
+            "--tempDir", "/tmp",
+          });
+        System.out.println("RETURN = " + x);
+         **/
+        
         int ret = recommenderJob.run(new String[] {
              "--input",args[0],
              "--output",args[1],
              "--usersFile","/tmp/users.txt",
-             "--tempDir", "/tmp",
+             "--tempDir", "/tmp/mahout_"+System.currentTimeMillis(),
              "--similarityClassname", "SIMILARITY_PEARSON_CORRELATION",
-             //"--numRecommendations", "4", 
+             "--threshold",".00000000001",
+             "--numRecommendations", "4", 
              //"--encodeLongsAsInts",
              //Boolean.FALSE.toString(), 
              //"--itemBased", Boolean.FALSE.toString() 
