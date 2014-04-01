@@ -7,19 +7,17 @@ digraph ethane {
    CUSTOMER_PAGE [label="CUSTOMER_PAGE|json|CUSTOMER_PAGE/part*"];
    DIRTY_CSV [label="DIRTY_CSV|fname   lname -prod , price ,prod,..|generated/part*"];
    CSV [label="CSV|fname,lname,prod,price,date,xcoord,ycoord,...|cleaned/part*"];
-   MAHOUT_VIEW_INPUT [label="MAHOUT_VIEW  | jay vyas, dogfood, .6 |  <hive_warehouse>/mahout_cf_in/part*" ];
-   MAHOUT_CF [label="MAHOUT_CF  | jay vyas, recommended = dog leash, .6 | mahout_cf_out/part*" ];
-   PROD_HASH [shape=diamond label="PRODUCT->int"];   
-   USER_HASH [shape=diamond label="USER->int"];
-
+   MAHOUT_VIEW_INPUT [label="MAHOUT_VIEW  |  (hashed name) 10001, (hashed purchases) 203 |  <hive_warehouse>/mahout_cf_in/part*" ];
+   MAHOUT_CF [label="MAHOUT_CF  | (hashed name) 10001, (hashed product) 201, .6 | mahout_cf_out/part*" ];
+ 
    Generate -> DIRTY_CSV [label="hadoop jar bigpetstore.jar org.bigtop.bigpetstore.generator.BPSGenerator 100 bps/generated/"] ;
    DIRTY_CSV -> pig [label=""];  
    
    pig -> CSV [label="hadoop jar bigpetstore.jar org.bigtop.bigpetstore.etl.PigCSVCleaner bps/generated/ bps/cleaned/"];
    pig -> PIG_ANALYTICS [label="same as CSV job, but add your scripts to end... p1.pig p2.pig ..."];
    PIG_ANALYTICS -> CSV;
-   PROD_HASH -> pig [label="int val for collab classifier"];
-   USER_HASH -> pig  [label="int val for collab classifier"];
+   PROD_HASH -> hive [label="hive hash udf"];
+   USER_HASH -> hive  [label="hive hash udf"];
    
    CSV -> hive ; 
    hive -> MAHOUT_VIEW_INPUT [label="hadoop jar bigpetstore.jar org.bigtop.bigpetstore.etl.HiveViewCreator bps/pig_out mahout_cf_in"];          
