@@ -85,10 +85,10 @@
 			<version>${hadoop.version}</version>
 		</dependency>
 
-		<!-- mahout deps <dependency> <groupId>org.apache.mahout</groupId> <artifactId>mahout-core</artifactId> 
-			<version>0.9</version> <exclusions> </exclusions> </dependency> -->
-
-
+		<!-- mahout deps : may need to turn these on/off when testing mahout locally-->
+		
+		<dependency> <groupId>org.apache.mahout</groupId> <artifactId>mahout-core</artifactId> 
+			<version>0.9</version> <exclusions> </exclusions> </dependency> 
 		<!-- pig deps -->
 		<dependency>
 			<groupId>org.apache.pig</groupId>
