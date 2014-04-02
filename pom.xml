@@ -76,16 +76,15 @@
 			<version>15.0</version>
 		</dependency>
 
-		<!-- hadoop deps we add 1.2.1 just because hive seems to want some old 
-			apis? 
-			-->
-		<dependency>
+		<!--
+		  Important: Remove this dependency when running hive integration tests...
+		  <dependency>
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-client</artifactId>
 			<version>${hadoop.version}</version>
-		</dependency>
-
-		<!-- mahout deps : may need to turn these on/off when testing mahout locally-->
+		  </dependency>
+	       -->	
+               <!-- mahout deps : may need to turn these on/off when testing mahout locally-->
 		
 		<dependency> <groupId>org.apache.mahout</groupId> <artifactId>mahout-core</artifactId> 
 			<version>0.9</version> <exclusions> </exclusions> </dependency> 

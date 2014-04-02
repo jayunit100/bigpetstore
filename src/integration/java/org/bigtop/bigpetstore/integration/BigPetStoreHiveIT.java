@@ -59,10 +59,10 @@ public class BigPetStoreHiveIT extends ITUtils{
         assertOutput(BPS_TEST_MAHOUT_IN, new Function<String, Boolean>() {
             public Boolean apply(String x) {
                 System.out.println("Verifying "+x);
-                String[] cols = x.split("\t");
-                Long.parseLong(cols[0]);
-                Long.parseLong(cols[1]);
-                Long.parseLong(cols[2]);
+                String[] cols = x.split(",");
+                Long.parseLong(cols[0].trim());
+                Long.parseLong(cols[1].trim());
+                Long.parseLong(cols[2].trim());
                 return true;
             }
         });

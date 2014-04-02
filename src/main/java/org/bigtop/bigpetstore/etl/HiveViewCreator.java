@@ -104,7 +104,7 @@ public class HiveViewCreator implements Tool {
         //will change once we add hashes into pig ETL clean
         String create2 = 
                 "create table "+outTableName+" as "+
-                "select hash(concat(state,fname,lname)),' ',hash(product),' ',1 " 
+                "select hash(concat(state,fname,lname)),',',hash(product),',',1 " 
                 + "from "+inTableName;
                 
         System.out.println("CREATE = " + create2  );

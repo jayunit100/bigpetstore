@@ -1,11 +1,10 @@
 package org.bigtop.bigpetstore.integration;
 
 
-import java.io.PrintWriter;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -30,8 +29,16 @@ public class ITUtils {
         }
         catch(Throwable e)
         {
-            throw new RuntimeException("Major error:  Probably issue.   " +
-            		"Check hadoop version?  "+ System.getProperties());
+           String cpath = (String) System.getProperties().get("java.class.path");
+           String msg="";
+           for(String cp : cpath.split(":")) {
+               if(cp.contains("hadoop")) {
+                   msg+=cp.replaceAll("hadoop", "**HADOOP**")+"\n";
+               }
+           }
+           throw new RuntimeException("Major error:  Probably issue.   " +
+            		"Check hadoop version?  "+ e.getMessage() +" .... check these classpath elements:"
+                    +msg);
         }
     }
     public static final Path BPS_TEST_GENERATED = fs.makeQualified(
@@ -47,7 +54,7 @@ public class ITUtils {
             new Path("bps_integration_",BigPetStoreConstants.OUTPUTS.MAHOUT_CF_OUT.name()));
 
     public static void main(String[] args){
-        
+         
     }
     //public static final Path CRUNCH_OUT = new Path("bps_integration_",BigPetStoreConstants.OUTPUT_3).makeQualified(fs);
 
