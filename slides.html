@@ -136,12 +136,14 @@ layout: false
 ]
 .right-column[
   A full stack hadoop application...leveraging the main players in the hadoop ecosystem
-  that can be used to demonstrate the entire hadoop ecosystem using a single domain.
+  that can be used to demonstrate the entire hadoop ecosystem using a single domain. 
+  
+- A blueprint for building maintainable hadoop apps 
 
-- Builds and tests like an enterprise grade application
+- Builds and tests like an enterprise grade application, i.e.
 ```
-    unit tests that run mapreduce workloads
-    integration tests w/ classpath profiles mirroring ecosystem classpaths.
+   mvn clean verify -P pig
+   mvn clean package
 ```
   
 - Generates an arbitrarily large amount of data (like TeraGen)
